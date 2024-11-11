@@ -1,27 +1,25 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'dart:convert';
 
 class ItemModel {
-  int ID;
+  int id;
   String name;
   int quantitiy;
   double price;
   ItemModel({
-    required this.ID,
+    required this.id,
     required this.name,
     required this.quantitiy,
     required this.price,
   });
 
   ItemModel copyWith({
-    int? ID,
+    int? id,
     String? name,
     int? quantitiy,
     double? price,
   }) {
     return ItemModel(
-      ID: ID ?? this.ID,
+      id: id ?? this.id,
       name: name ?? this.name,
       quantitiy: quantitiy ?? this.quantitiy,
       price: price ?? this.price,
@@ -30,7 +28,7 @@ class ItemModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'ID': ID,
+      'id': id,
       'name': name,
       'quantitiy': quantitiy,
       'price': price,
@@ -39,7 +37,7 @@ class ItemModel {
 
   factory ItemModel.fromMap(Map<String, dynamic> map) {
     return ItemModel(
-      ID: map['ID'] as int,
+      id: map['id'] as int,
       name: map['name'] as String,
       quantitiy: map['quantitiy'] as int,
       price: map['price'] as double,
@@ -53,14 +51,14 @@ class ItemModel {
 
   @override
   String toString() {
-    return 'ItemModel(ID: $ID, name: $name, quantitiy: $quantitiy, price: $price)';
+    return 'ItemModel(id: $id, name: $name, quantitiy: $quantitiy, price: $price)';
   }
 
   @override
   bool operator ==(covariant ItemModel other) {
     if (identical(this, other)) return true;
 
-    return other.ID == ID &&
+    return other.id == id &&
         other.name == name &&
         other.quantitiy == quantitiy &&
         other.price == price;
@@ -68,6 +66,6 @@ class ItemModel {
 
   @override
   int get hashCode {
-    return ID.hashCode ^ name.hashCode ^ quantitiy.hashCode ^ price.hashCode;
+    return id.hashCode ^ name.hashCode ^ quantitiy.hashCode ^ price.hashCode;
   }
 }

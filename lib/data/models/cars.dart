@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'dart:convert';
 
 class CarModel {
@@ -7,11 +5,17 @@ class CarModel {
   String carNum;
   String password;
   String carType;
+  String? drivername;
+  String? driverPhoneNum;
+  String? representative;
   CarModel({
     required this.id,
     required this.carNum,
     required this.password,
     required this.carType,
+    this.drivername,
+    this.driverPhoneNum,
+    this.representative,
   });
 
   CarModel copyWith({
@@ -19,12 +23,18 @@ class CarModel {
     String? carNum,
     String? password,
     String? carType,
+    String? drivername,
+    String? driverPhoneNum,
+    String? representative,
   }) {
     return CarModel(
       id: id ?? this.id,
       carNum: carNum ?? this.carNum,
       password: password ?? this.password,
       carType: carType ?? this.carType,
+      drivername: drivername ?? this.drivername,
+      driverPhoneNum: driverPhoneNum ?? this.driverPhoneNum,
+      representative: representative ?? this.representative,
     );
   }
 
@@ -34,6 +44,9 @@ class CarModel {
       'carNum': carNum,
       'password': password,
       'carType': carType,
+      'drivername': drivername,
+      'driverPhoneNum': driverPhoneNum,
+      'representative': representative,
     };
   }
 
@@ -43,6 +56,14 @@ class CarModel {
       carNum: map['carNum'] as String,
       password: map['password'] as String,
       carType: map['carType'] as String,
+      drivername:
+          map['drivername'] != null ? map['drivername'] as String : null,
+      driverPhoneNum: map['driverPhoneNum'] != null
+          ? map['driverPhoneNum'] as String
+          : null,
+      representative: map['representative'] != null
+          ? map['representative'] as String
+          : null,
     );
   }
 
@@ -53,7 +74,7 @@ class CarModel {
 
   @override
   String toString() {
-    return 'CarModel(id: $id, carNum: $carNum, password: $password, carType: $carType)';
+    return 'CarModel(id: $id, carNum: $carNum, password: $password, carType: $carType, drivername: $drivername, driverPhoneNum: $driverPhoneNum, representative: $representative)';
   }
 
   @override
@@ -63,11 +84,20 @@ class CarModel {
     return other.id == id &&
         other.carNum == carNum &&
         other.password == password &&
-        other.carType == carType;
+        other.carType == carType &&
+        other.drivername == drivername &&
+        other.driverPhoneNum == driverPhoneNum &&
+        other.representative == representative;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ carNum.hashCode ^ password.hashCode ^ carType.hashCode;
+    return id.hashCode ^
+        carNum.hashCode ^
+        password.hashCode ^
+        carType.hashCode ^
+        drivername.hashCode ^
+        driverPhoneNum.hashCode ^
+        representative.hashCode;
   }
 }
