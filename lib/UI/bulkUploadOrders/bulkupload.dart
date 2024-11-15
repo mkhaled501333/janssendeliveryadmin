@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:excel/excel.dart';
@@ -117,7 +119,7 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                                       e.toString().toInt(),
                                   orderNum: lastOrderNum,
                                   orderDate: DateTime.now(),
-                                  carNum: d.first[1].toString().toInt(),
+                                  carNum: d.first[1].toString(),
                                   driverName: d.first[2],
                                   driverPhoneNum: d.first[3].toString(),
                                   represetiveName: d.first[4],
@@ -134,7 +136,12 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                                               r[13].toString().toInt(),
                                           name: r[11],
                                           quantitiy: r[12].toString().toInt(),
-                                          price: r[13].toString().todouble()))
+                                          price: r[13]
+                                              .toString()
+                                              .toInt()
+                                              .toDouble()
+                                              .toStringAsFixed(1)
+                                              .todouble()))
                                       .toList(),
                                   shipped: false,
                                   shippedTime: DateTime(0),
@@ -149,8 +156,8 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                                   closedTime: DateTime(0),
                                   payed: false,
                                   payingWay: "",
-                                  chargedamount: 0,
-                                  notes: "notes");
+                                  chargedamount: 0.0,
+                                  notes: "");
 
                               FirebaseDatabase.instance
                                   .ref("orders/${record.id}")

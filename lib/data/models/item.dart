@@ -1,10 +1,12 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'dart:convert';
 
 class ItemModel {
   int id;
   String name;
-  int quantitiy;
-  double price;
+  num quantitiy;
+  num price;
   ItemModel({
     required this.id,
     required this.name,
@@ -15,8 +17,8 @@ class ItemModel {
   ItemModel copyWith({
     int? id,
     String? name,
-    int? quantitiy,
-    double? price,
+    num? quantitiy,
+    num? price,
   }) {
     return ItemModel(
       id: id ?? this.id,
@@ -39,8 +41,8 @@ class ItemModel {
     return ItemModel(
       id: map['id'] as int,
       name: map['name'] as String,
-      quantitiy: map['quantitiy'] as int,
-      price: map['price'] as double,
+      quantitiy: map['quantitiy'] as num,
+      price: map['price'] as num,
     );
   }
 

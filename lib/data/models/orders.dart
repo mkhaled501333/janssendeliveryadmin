@@ -3,14 +3,15 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:janssendeliveryadmin/data/models/item.dart';
 import 'package:janssendeliveryadmin/data/models/location.dart';
+
+import 'item.dart';
 
 class OrderModel {
   int id;
   int orderNum;
   DateTime orderDate;
-  int carNum;
+  String carNum;
   String driverName;
   String driverPhoneNum;
   String represetiveName;
@@ -41,7 +42,7 @@ class OrderModel {
   //4
   bool payed;
   String payingWay;
-  double chargedamount;
+  num chargedamount;
   //
   String notes;
   OrderModel({
@@ -80,7 +81,7 @@ class OrderModel {
     int? id,
     int? orderNum,
     DateTime? orderDate,
-    int? carNum,
+    String? carNum,
     String? driverName,
     String? driverPhoneNum,
     String? represetiveName,
@@ -104,7 +105,7 @@ class OrderModel {
     DateTime? closedTime,
     bool? payed,
     String? payingWay,
-    double? chargedamount,
+    num? chargedamount,
     String? notes,
   }) {
     return OrderModel(
@@ -179,7 +180,7 @@ class OrderModel {
       id: map['id'] as int,
       orderNum: map['orderNum'] as int,
       orderDate: DateTime.fromMillisecondsSinceEpoch(map['orderDate'] as int),
-      carNum: map['carNum'] as int,
+      carNum: map['carNum'] as String,
       driverName: map['driverName'] as String,
       driverPhoneNum: map['driverPhoneNum'] as String,
       represetiveName: map['represetiveName'] as String,
@@ -211,7 +212,7 @@ class OrderModel {
       closedTime: DateTime.fromMillisecondsSinceEpoch(map['closedTime'] as int),
       payed: map['payed'] as bool,
       payingWay: map['payingWay'] as String,
-      chargedamount: map['chargedamount'] as double,
+      chargedamount: map['chargedamount'] as num,
       notes: map['notes'] as String,
     );
   }

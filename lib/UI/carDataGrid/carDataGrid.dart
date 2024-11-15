@@ -1,16 +1,20 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: must_be_immutable
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:janssendeliveryadmin/UI/orderDetails.dart/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:janssendeliveryadmin/UI/GoogleMap/GoogleMap.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import 'package:janssendeliveryadmin/UI/orderDetails.dart/provider.dart';
+import 'package:janssendeliveryadmin/UI/orderDetails.dart/statuesWidgets.dart';
 import 'package:janssendeliveryadmin/app/utiles.dart';
 import 'package:janssendeliveryadmin/data/models/location.dart';
 import 'package:janssendeliveryadmin/data/models/orders.dart';
-import 'package:janssendeliveryadmin/UI/orderDetails.dart/statuesWidgets.dart';
 
 final ValueNotifier<int> counter = ValueNotifier<int>(0);
 final DataGridController _dataGridController = DataGridController();
@@ -182,7 +186,7 @@ class DataGridForcar extends StatelessWidget {
 }
 
 class DataModel {
-  int carnum;
+  String carnum;
   String drivername;
   String driverPhoneNum;
   String represintitivename;
@@ -206,6 +210,110 @@ class DataModel {
     required this.starttime,
     required this.startLocation,
   });
+
+  DataModel copyWith({
+    String? carnum,
+    String? drivername,
+    String? driverPhoneNum,
+    String? represintitivename,
+    String? represintitivePhoneNum,
+    int? totalOrder,
+    int? deleverd,
+    int? canceld,
+    int? inprogress,
+    DateTime? starttime,
+    Location? startLocation,
+  }) {
+    return DataModel(
+      carnum: carnum ?? this.carnum,
+      drivername: drivername ?? this.drivername,
+      driverPhoneNum: driverPhoneNum ?? this.driverPhoneNum,
+      represintitivename: represintitivename ?? this.represintitivename,
+      represintitivePhoneNum:
+          represintitivePhoneNum ?? this.represintitivePhoneNum,
+      totalOrder: totalOrder ?? this.totalOrder,
+      deleverd: deleverd ?? this.deleverd,
+      canceld: canceld ?? this.canceld,
+      inprogress: inprogress ?? this.inprogress,
+      starttime: starttime ?? this.starttime,
+      startLocation: startLocation ?? this.startLocation,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'carnum': carnum,
+      'drivername': drivername,
+      'driverPhoneNum': driverPhoneNum,
+      'represintitivename': represintitivename,
+      'represintitivePhoneNum': represintitivePhoneNum,
+      'totalOrder': totalOrder,
+      'deleverd': deleverd,
+      'canceld': canceld,
+      'inprogress': inprogress,
+      'starttime': starttime.millisecondsSinceEpoch,
+      'startLocation': startLocation.toMap(),
+    };
+  }
+
+  factory DataModel.fromMap(Map<String, dynamic> map) {
+    return DataModel(
+      carnum: map['carnum'] as String,
+      drivername: map['drivername'] as String,
+      driverPhoneNum: map['driverPhoneNum'] as String,
+      represintitivename: map['represintitivename'] as String,
+      represintitivePhoneNum: map['represintitivePhoneNum'] as String,
+      totalOrder: map['totalOrder'] as int,
+      deleverd: map['deleverd'] as int,
+      canceld: map['canceld'] as int,
+      inprogress: map['inprogress'] as int,
+      starttime: DateTime.fromMillisecondsSinceEpoch(map['starttime'] as int),
+      startLocation:
+          Location.fromMap(map['startLocation'] as Map<String, dynamic>),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory DataModel.fromJson(String source) =>
+      DataModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'DataModel(carnum: $carnum, drivername: $drivername, driverPhoneNum: $driverPhoneNum, represintitivename: $represintitivename, represintitivePhoneNum: $represintitivePhoneNum, totalOrder: $totalOrder, deleverd: $deleverd, canceld: $canceld, inprogress: $inprogress, starttime: $starttime, startLocation: $startLocation)';
+  }
+
+  @override
+  bool operator ==(covariant DataModel other) {
+    if (identical(this, other)) return true;
+
+    return other.carnum == carnum &&
+        other.drivername == drivername &&
+        other.driverPhoneNum == driverPhoneNum &&
+        other.represintitivename == represintitivename &&
+        other.represintitivePhoneNum == represintitivePhoneNum &&
+        other.totalOrder == totalOrder &&
+        other.deleverd == deleverd &&
+        other.canceld == canceld &&
+        other.inprogress == inprogress &&
+        other.starttime == starttime &&
+        other.startLocation == startLocation;
+  }
+
+  @override
+  int get hashCode {
+    return carnum.hashCode ^
+        drivername.hashCode ^
+        driverPhoneNum.hashCode ^
+        represintitivename.hashCode ^
+        represintitivePhoneNum.hashCode ^
+        totalOrder.hashCode ^
+        deleverd.hashCode ^
+        canceld.hashCode ^
+        inprogress.hashCode ^
+        starttime.hashCode ^
+        startLocation.hashCode;
+  }
 }
 
 class DataSource extends DataGridSource {
@@ -213,7 +321,7 @@ class DataSource extends DataGridSource {
   DataSource({required List<DataModel> data}) {
     _employeeData = data
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'carnum', value: e.carnum),
+              DataGridCell<String>(columnName: 'carnum', value: e.carnum),
               DataGridCell<String>(
                   columnName: 'drivername', value: e.drivername),
               DataGridCell<String>(
@@ -275,14 +383,18 @@ class DataSource extends DataGridSource {
                   }),
                 ],
               ),
-            "location" => Builder(builder: (context) {
-                return e.value.toString() == "deleverd"
+            "startlocation" => Builder(builder: (context) {
+                final val = e.value as Location;
+                return val.lat != ''
                     ? IconButton(
                         icon: const Icon(
                           Icons.location_on,
                           size: 15,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          gotoLocation(
+                              LatLng(val.lat.todouble(), val.lon.todouble()));
+                        },
                       )
                     : const SizedBox();
               }),

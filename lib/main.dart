@@ -173,49 +173,53 @@ class MyHomePage extends StatelessWidget {
           return Container(
             color: const Color.fromARGB(255, 255, 255, 255),
             width: 222,
-            child: Column(
-              children: [
-                const Gap(15),
-                Text(
-                  "Order : ${myType.x}",
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Container(
-                  color: Colors.black,
-                  width: 300,
-                  height: .8,
-                ),
-                const Gap(6),
-                One("client", order.clientName),
-                Tow("order date", order.orderDate.formatt_yMd()),
-                One("adress", order.adress),
-                Tow("order date", order.orderDate.formatt_yMd()),
-                ...order.items.map((e) => Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Container(
-                        width: double.infinity,
-                        decoration:
-                            BoxDecoration(border: Border.all(width: .4)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              e.name,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+            child: Column(children: [
+              const Gap(15),
+              Text(
+                "Order : ${myType.x}",
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Container(
+                color: Colors.black,
+                width: 300,
+                height: .8,
+              ),
+              const Gap(6),
+              One("client", order.clientName),
+              Tow("order date", order.orderDate.formatt_yMd()),
+              One("adress", order.adress),
+              Tow("order date", order.orderDate.formatt_yMd()),
+              Expanded(
+                  child: ListView(
+                children: order.items
+                    .map((e) => Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Container(
+                            width: double.infinity,
+                            decoration:
+                                BoxDecoration(border: Border.all(width: .4)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  e.name,
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                Text("Quantity : ${e.quantitiy}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey[400])),
+                                Text("Price : ${e.price}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600)),
+                              ],
                             ),
-                            Text("Quantity : ${e.quantitiy}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.grey[400])),
-                            Text("Price : ${e.price}",
-                                style: TextStyle(fontWeight: FontWeight.w600)),
-                          ],
-                        ),
-                      ),
-                    ))
-              ],
-            ),
+                          ),
+                        ))
+                    .toList(),
+              )),
+            ]),
           );
         },
       ),
@@ -273,9 +277,13 @@ class MyHomePage extends StatelessWidget {
             color: const Color.fromARGB(255, 230, 227, 227),
             borderRadius: BorderRadius.circular(5),
           ),
-          child: Text(
-            "$label : $data",
-            style: const TextStyle(fontWeight: FontWeight.w600),
+          child: FittedBox(
+            alignment: Alignment.centerLeft,
+            fit: BoxFit.scaleDown,
+            child: Text(
+              "$label : $data",
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
         ),
       ),

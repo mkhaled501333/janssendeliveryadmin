@@ -259,12 +259,13 @@ class DataSource extends DataGridSource {
                   columnName: 'governomate', value: e.governomate),
               DataGridCell<String>(columnName: 'city', value: e.city),
               DataGridCell<String>(columnName: 'adress', value: e.adress),
-              DataGridCell<int>(columnName: 'carnum', value: e.carNum),
+              DataGridCell<String>(columnName: 'carnum', value: e.carNum),
               DataGridCell<String>(columnName: 'statues', value: getstatues(e)),
-              DataGridCell<int>(columnName: 'location', value: e.id),
+              DataGridCell<String>(
+                  columnName: 'location', value: getlocation(e)),
               DataGridCell<String>(
                   columnName: 'Paymentmethod', value: e.payingWay),
-              DataGridCell<double>(
+              DataGridCell<num>(
                   columnName: 'chargedamount', value: e.chargedamount),
               DataGridCell<String>(
                   columnName: 'resonforrejection', value: e.cancelReason),
@@ -283,11 +284,16 @@ class DataSource extends DataGridSource {
       return "inProgress";
     }
   }
-//  String getlocation(OrderModel e){
-//     if(e.deleverdLocation){
-//       return "deleverd";
-//     }else if(e.canceled==true){return "canceld";}else{return "inProgress";}
-//   }
+
+  String getlocation(OrderModel e) {
+    if (e.deleverd == true) {
+      return "deleverd";
+    } else if (e.canceled == true) {
+      return "canceld";
+    } else {
+      return "inProgress";
+    }
+  }
 
   List<DataGridRow> _employeeData = [];
 
