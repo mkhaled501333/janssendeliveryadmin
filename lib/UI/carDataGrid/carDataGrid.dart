@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:janssendeliveryadmin/UI/GoogleMap/GoogleMap.dart';
+import 'package:janssendeliveryadmin/UI/GoogleMap/mapcontroller.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -337,8 +337,7 @@ class DataSource extends DataGridSource {
               DataGridCell<int>(columnName: 'inprogress', value: e.inprogress),
               DataGridCell<String>(
                   columnName: 'starttime', value: e.starttime.formatt_yMdHM()),
-              DataGridCell<Location>(
-                  columnName: 'startlocation', value: e.startLocation),
+              DataGridCell<DataModel>(columnName: 'startlocation', value: e),
               const DataGridCell<bool>(columnName: 'archived', value: false),
             ]))
         .toList();
@@ -376,24 +375,25 @@ class DataSource extends DataGridSource {
                     return TextButton(
                         onPressed: () {
                           Scaffold.of(context).openEndDrawer();
-
-                          print(row.getCells().last.value.toString());
+                          // print(row.getCells().last.value.toString());
                         },
                         child: Text(e.value.toString()));
                   }),
                 ],
               ),
             "startlocation" => Builder(builder: (context) {
-                final val = e.value as Location;
-                return val.lat != ''
+                final val = e.value as DataModel;
+                return val.startLocation.lat != ''
                     ? IconButton(
                         icon: const Icon(
                           Icons.location_on,
                           size: 15,
                         ),
                         onPressed: () {
-                          gotoLocation(
-                              LatLng(val.lat.todouble(), val.lon.todouble()));
+                          context.read<MapProviderController>().gotoLocation(
+                              val,
+                              LatLng(val.startLocation.lat.todouble(),
+                                  val.startLocation.lon.todouble()));
                         },
                       )
                     : const SizedBox();

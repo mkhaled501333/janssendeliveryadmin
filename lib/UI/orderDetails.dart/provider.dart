@@ -40,6 +40,9 @@ class OrderProvider extends ChangeNotifier {
   }
 
   int v = 88;
+  refreshUi() {
+    notifyListeners();
+  }
 }
 
 class RemoteDataSorce extends ChangeNotifier {}

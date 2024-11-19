@@ -31,16 +31,14 @@ class DataGridForOrder extends StatelessWidget {
             .toSet()
             .toList()
             .length;
+
         return SfDataGridTheme(
           data: const SfDataGridThemeData(
             gridLineStrokeWidth: 0.6,
-            // sortIcon: SizedBox(),
-            // filterIcon: SizedBox()
           ),
           child: SfDataGrid(
             onSelectionChanged: (v, g) {
               counter.value = _dataGridController.selectedRows.length;
-              print(_dataGridController.selectedRows.length);
             },
             showCheckboxColumn: true,
             checkboxColumnSettings: const DataGridCheckboxColumnSettings(),
@@ -311,6 +309,7 @@ class DataSource extends DataGridSource {
                   Builder(builder: (context) {
                     return TextButton(
                         onPressed: () {
+                          context.read<OrderProvider>().refreshUi();
                           context.read<SharedProvider>().x =
                               row.getCells().first.value.toString().toInt();
                           Scaffold.of(context).openEndDrawer();
@@ -345,12 +344,14 @@ class DataSource extends DataGridSource {
             _ => Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(0.0),
-                child: Text(
-                  style: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.w500),
-                  e.value.toString(),
-                  overflow: TextOverflow.ellipsis,
-                ),
+                child: Tooltip(
+                    message: e.value.toString(),
+                    child: Text(
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.w500),
+                      e.value.toString(),
+                      overflow: TextOverflow.ellipsis,
+                    )),
               ),
           };
         }).toList());

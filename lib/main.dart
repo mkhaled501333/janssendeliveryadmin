@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:janssendeliveryadmin/UI/GoogleMap/GoogleMap.dart';
+import 'package:janssendeliveryadmin/UI/GoogleMap/mapcontroller.dart';
 import 'package:janssendeliveryadmin/UI/bulkUploadOrders/bulkupload.dart';
 import 'package:janssendeliveryadmin/UI/carDataGrid/carDataGrid.dart';
 import 'package:janssendeliveryadmin/UI/drivers/drivers.dart';
@@ -32,11 +33,7 @@ Future<void> main() async {
       storageBucket: "janssendelivery-ba129.appspot.com",
     ),
   );
-  // FirebaseDatabase.instance.setPersistenceEnabled(true);
-
   runApp(MyApp());
-
-  // FirebaseDatabase.instance;
 }
 
 class MyApp extends StatelessWidget {
@@ -52,6 +49,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => SharedProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MapProviderController(),
         ),
       ],
       child: MaterialApp(
