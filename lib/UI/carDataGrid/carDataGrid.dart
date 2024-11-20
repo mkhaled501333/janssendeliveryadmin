@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:janssendeliveryadmin/UI/GoogleMap/mapcontroller.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -176,7 +177,7 @@ class DataGridForcar extends StatelessWidget {
                 allowFiltering: false,
                 allowSorting: false,
                 width: 66,
-                columnName: '',
+                columnName: 'progress',
                 label: const Text(' ')),
           ],
         );
@@ -338,7 +339,9 @@ class DataSource extends DataGridSource {
               DataGridCell<String>(
                   columnName: 'starttime', value: e.starttime.formatt_yMdHM()),
               DataGridCell<DataModel>(columnName: 'startlocation', value: e),
-              const DataGridCell<bool>(columnName: 'archived', value: false),
+              DataGridCell<double>(
+                  columnName: 'progress',
+                  value: ((e.canceld + e.deleverd) / e.totalOrder) * 100),
             ]))
         .toList();
   }
@@ -407,6 +410,19 @@ class DataSource extends DataGridSource {
                   "inProgress" => const InProgress(),
                   _ => const SizedBox()
                 },
+              ),
+            "progress" => LinearPercentIndicator(
+                barRadius: const Radius.circular(9),
+                width: 65,
+                animation: true,
+                lineHeight: 15.0,
+                animationDuration: 2500,
+                percent: e.value / 100,
+                center: Text(
+                  "${e.value} %",
+                  style: const TextStyle(fontSize: 13),
+                ),
+                progressColor: const Color.fromARGB(255, 90, 187, 94),
               ),
             _ => Container(
                 alignment: Alignment.center,

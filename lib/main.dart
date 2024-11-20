@@ -8,6 +8,8 @@ import 'package:janssendeliveryadmin/UI/bulkUploadOrders/bulkupload.dart';
 import 'package:janssendeliveryadmin/UI/carDataGrid/carDataGrid.dart';
 import 'package:janssendeliveryadmin/UI/drivers/drivers.dart';
 import 'package:janssendeliveryadmin/UI/drivers/provider.dart';
+import 'package:janssendeliveryadmin/UI/login/loginController.dart';
+import 'package:janssendeliveryadmin/UI/login/loginPage.dart';
 
 import 'package:janssendeliveryadmin/UI/orderDetails.dart/dataGridForOrders.dart';
 import 'package:janssendeliveryadmin/UI/orderDetails.dart/provider.dart';
@@ -53,18 +55,36 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => MapProviderController(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => LoginController(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'admin',
-        home: Scaffold(
-          body: Builder(builder: (context) {
-            context.read<OrderProvider>().getData();
-            context.read<DriversProvider>().getData();
-            return const SidebarPage();
-          }),
+        home: Consumer<LoginController>(
+          builder: (context, myType, child) {
+            return myType.loggedIn == false ? LoginPage() : MainPage();
+          },
         ),
       ),
+    );
+  }
+}
+
+class MainPage extends StatelessWidget {
+  const MainPage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Builder(builder: (context) {
+        context.read<OrderProvider>().getData();
+        context.read<DriversProvider>().getData();
+        return const SidebarPage();
+      }),
     );
   }
 }
