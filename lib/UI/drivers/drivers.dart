@@ -109,20 +109,165 @@ class Drivers extends StatelessWidget {
                                   color: Colors.grey.shade400, width: 0.7),
                               color: const Color.fromARGB(255, 255, 255, 255)),
                           children: const [
-                            Text("Num"),
                             Text("car Num"),
                             Text("password"),
                             Text("car Type"),
+                            Text("edit"),
                           ]),
                       ...myType.cars.values.map(
                         (e) => TableRow(
                             decoration: const BoxDecoration(
                                 color: Color.fromARGB(255, 255, 255, 255)),
                             children: [
-                              const Text("Num"),
                               SelectableText(e.carNum.toString()),
                               SelectableText(e.password.toString()),
                               SelectableText(e.carType.toString()),
+                              IconButton(
+                                  onPressed: () {
+                                    final carnumTED = TextEditingController();
+                                    carnumTED.text = e.carNum;
+                                    final passwordTED = TextEditingController();
+                                    passwordTED.text = e.password;
+                                    final carTypeTED = TextEditingController();
+                                    carTypeTED.text = e.carType;
+                                    showDialog(
+                                        context: context,
+                                        builder: (c) => AlertDialog(
+                                              content: SizedBox(
+                                                width: 100,
+                                                height: 300,
+                                                child: Column(
+                                                  children: [
+                                                    TextField(
+                                                      controller: carnumTED,
+                                                      style: const TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                      decoration:
+                                                          InputDecoration(
+                                                              contentPadding:
+                                                                  const EdgeInsets.only(
+                                                                      top: 4),
+                                                              prefixIcon: const Icon(Icons
+                                                                  .search_outlined),
+                                                              hoverColor:
+                                                                  Colors.orange,
+                                                              focusedBorder: OutlineInputBorder(
+                                                                  borderSide: const BorderSide(
+                                                                      color: Color.fromARGB(
+                                                                          255, 255, 180, 4)),
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          9)),
+                                                              border: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          9),
+                                                                  borderSide: const BorderSide(
+                                                                      color: Colors.orange,
+                                                                      width: 3)),
+                                                              hintStyle: const TextStyle(
+                                                                fontSize: 12,
+                                                              ),
+                                                              floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                              label: Text('car Num'),
+                                                              hintText: 'car Num'),
+                                                    ),
+                                                    Gap(9),
+                                                    TextField(
+                                                      controller: passwordTED,
+                                                      style: const TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                      decoration:
+                                                          InputDecoration(
+                                                              contentPadding:
+                                                                  const EdgeInsets.only(
+                                                                      top: 4),
+                                                              prefixIcon: const Icon(Icons
+                                                                  .search_outlined),
+                                                              hoverColor:
+                                                                  Colors.orange,
+                                                              focusedBorder: OutlineInputBorder(
+                                                                  borderSide: const BorderSide(
+                                                                      color: Color.fromARGB(
+                                                                          255, 255, 180, 4)),
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          9)),
+                                                              border: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          9),
+                                                                  borderSide: const BorderSide(
+                                                                      color: Colors.orange,
+                                                                      width: 3)),
+                                                              hintStyle: const TextStyle(
+                                                                fontSize: 12,
+                                                              ),
+                                                              floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                              label: Text('password'),
+                                                              hintText: 'password'),
+                                                    ),
+                                                    Gap(9),
+                                                    TextField(
+                                                      controller: carTypeTED,
+                                                      style: const TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                      decoration:
+                                                          InputDecoration(
+                                                              contentPadding:
+                                                                  const EdgeInsets.only(
+                                                                      top: 4),
+                                                              prefixIcon: const Icon(Icons
+                                                                  .search_outlined),
+                                                              hoverColor:
+                                                                  Colors.orange,
+                                                              focusedBorder: OutlineInputBorder(
+                                                                  borderSide: const BorderSide(
+                                                                      color: Color.fromARGB(
+                                                                          255, 255, 180, 4)),
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          9)),
+                                                              border: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          9),
+                                                                  borderSide: const BorderSide(
+                                                                      color: Colors.orange,
+                                                                      width: 3)),
+                                                              hintStyle: const TextStyle(
+                                                                fontSize: 12,
+                                                              ),
+                                                              floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                              label: Text('car type'),
+                                                              hintText: 'car type'),
+                                                    ),
+                                                    ElevatedButton(
+                                                        onPressed: () {
+                                                          e.carNum =
+                                                              carnumTED.text;
+                                                          e.password =
+                                                              passwordTED.text;
+                                                          e.carType =
+                                                              carTypeTED.text;
+                                                          myType.add(e);
+                                                        },
+                                                        child: Text("ok"))
+                                                  ],
+                                                ),
+                                              ),
+                                            ));
+                                  },
+                                  icon: Icon(Icons.edit)),
                             ]),
                       )
                     ],
