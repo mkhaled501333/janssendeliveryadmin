@@ -6,11 +6,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:janssendeliveryadmin/UI/GoogleMap/mapcontroller.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import 'package:janssendeliveryadmin/UI/GoogleMap/mapcontroller.dart';
+import 'package:janssendeliveryadmin/UI/carDataGrid/carsProvider.dart';
 import 'package:janssendeliveryadmin/UI/orderDetails.dart/provider.dart';
 import 'package:janssendeliveryadmin/UI/orderDetails.dart/statuesWidgets.dart';
 import 'package:janssendeliveryadmin/app/utiles.dart';
@@ -21,11 +22,11 @@ final ValueNotifier<int> counter = ValueNotifier<int>(0);
 final DataGridController _dataGridController = DataGridController();
 
 class DataGridForcar extends StatelessWidget {
-  DataGridForcar({super.key});
+  const DataGridForcar({super.key});
   @override
   Widget build(BuildContext context) {
-    return Consumer<OrderProvider>(
-      builder: (context, myType, child) {
+    return Consumer2<OrderProvider, CarsProvider>(
+      builder: (context, myType, carprovider, child) {
         final data = myType.orders.values.toList();
         final d = data
             .map(
@@ -48,6 +49,11 @@ class DataGridForcar extends StatelessWidget {
               totalOrder: totla,
               deleverd: deleverd,
               canceld: canceld,
+              chargedamount: x.chargedamount,
+              totlamount: y
+                  .expand((f) => f.items)
+                  .map((e) => e.price)
+                  .reduce((a, b) => a + b),
               inprogress: totla - deleverd - canceld,
               starttime: x.shippedTime,
               startLocation: x.shippedLocation);
@@ -58,7 +64,9 @@ class DataGridForcar extends StatelessWidget {
 
           onSelectionChanged: (v, g) {
             counter.value = _dataGridController.selectedRows.length;
-            print(_dataGridController.selectedRows.length);
+
+            print(_dataGridController.selectedRows
+                .map((e) => e.getCells().first.value));
           },
           showCheckboxColumn: true,
           checkboxColumnSettings: const DataGridCheckboxColumnSettings(),
@@ -128,6 +136,14 @@ class DataGridForcar extends StatelessWidget {
             GridColumn(
                 allowFiltering: false,
                 width: 111,
+                columnName: 'cargedamount',
+                label: const Text(
+                  'Charged amount',
+                  overflow: TextOverflow.ellipsis,
+                )),
+            GridColumn(
+                allowFiltering: false,
+                width: 111,
                 columnName: 'totalorders',
                 label: const Text(
                   'Total Orders',
@@ -178,7 +194,55 @@ class DataGridForcar extends StatelessWidget {
                 allowSorting: false,
                 width: 66,
                 columnName: 'progress',
-                label: const Text(' ')),
+                label: IconButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (c) => AlertDialog(
+                                content: SizedBox(
+                                  width: 150,
+                                  height: 100,
+                                  child: Column(
+                                    children: [
+                                      ElevatedButton.icon(
+                                          onPressed: () {},
+                                          label: Row(
+                                            children: [
+                                              Icon(Icons.picture_as_pdf),
+                                              Text(
+                                                  "print selected (${_dataGridController.selectedRows.length})")
+                                            ],
+                                          )),
+                                      Gap(20),
+                                      ElevatedButton.icon(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  WidgetStatePropertyAll(
+                                                      Colors.red)),
+                                          onPressed: () {
+                                            for (var element
+                                                in _dataGridController
+                                                    .selectedRows) {
+                                              myType.archiveSelectedCar(element
+                                                  .getCells()
+                                                  .first
+                                                  .value
+                                                  .toString());
+                                            }
+                                          },
+                                          label: Row(
+                                            children: [
+                                              Icon(Icons.archive),
+                                              Text(
+                                                  "Archive selected (${_dataGridController.selectedRows.length})")
+                                            ],
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              ));
+                    },
+                    icon: const Icon(Icons.settings_applications_sharp))),
           ],
         );
       },
@@ -192,6 +256,8 @@ class DataModel {
   String driverPhoneNum;
   String represintitivename;
   String represintitivePhoneNum;
+  num totlamount;
+  num chargedamount;
   int totalOrder;
   int deleverd;
   int canceld;
@@ -204,6 +270,8 @@ class DataModel {
     required this.driverPhoneNum,
     required this.represintitivename,
     required this.represintitivePhoneNum,
+    required this.totlamount,
+    required this.chargedamount,
     required this.totalOrder,
     required this.deleverd,
     required this.canceld,
@@ -211,110 +279,6 @@ class DataModel {
     required this.starttime,
     required this.startLocation,
   });
-
-  DataModel copyWith({
-    String? carnum,
-    String? drivername,
-    String? driverPhoneNum,
-    String? represintitivename,
-    String? represintitivePhoneNum,
-    int? totalOrder,
-    int? deleverd,
-    int? canceld,
-    int? inprogress,
-    DateTime? starttime,
-    Location? startLocation,
-  }) {
-    return DataModel(
-      carnum: carnum ?? this.carnum,
-      drivername: drivername ?? this.drivername,
-      driverPhoneNum: driverPhoneNum ?? this.driverPhoneNum,
-      represintitivename: represintitivename ?? this.represintitivename,
-      represintitivePhoneNum:
-          represintitivePhoneNum ?? this.represintitivePhoneNum,
-      totalOrder: totalOrder ?? this.totalOrder,
-      deleverd: deleverd ?? this.deleverd,
-      canceld: canceld ?? this.canceld,
-      inprogress: inprogress ?? this.inprogress,
-      starttime: starttime ?? this.starttime,
-      startLocation: startLocation ?? this.startLocation,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'carnum': carnum,
-      'drivername': drivername,
-      'driverPhoneNum': driverPhoneNum,
-      'represintitivename': represintitivename,
-      'represintitivePhoneNum': represintitivePhoneNum,
-      'totalOrder': totalOrder,
-      'deleverd': deleverd,
-      'canceld': canceld,
-      'inprogress': inprogress,
-      'starttime': starttime.millisecondsSinceEpoch,
-      'startLocation': startLocation.toMap(),
-    };
-  }
-
-  factory DataModel.fromMap(Map<String, dynamic> map) {
-    return DataModel(
-      carnum: map['carnum'] as String,
-      drivername: map['drivername'] as String,
-      driverPhoneNum: map['driverPhoneNum'] as String,
-      represintitivename: map['represintitivename'] as String,
-      represintitivePhoneNum: map['represintitivePhoneNum'] as String,
-      totalOrder: map['totalOrder'] as int,
-      deleverd: map['deleverd'] as int,
-      canceld: map['canceld'] as int,
-      inprogress: map['inprogress'] as int,
-      starttime: DateTime.fromMillisecondsSinceEpoch(map['starttime'] as int),
-      startLocation:
-          Location.fromMap(map['startLocation'] as Map<String, dynamic>),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory DataModel.fromJson(String source) =>
-      DataModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'DataModel(carnum: $carnum, drivername: $drivername, driverPhoneNum: $driverPhoneNum, represintitivename: $represintitivename, represintitivePhoneNum: $represintitivePhoneNum, totalOrder: $totalOrder, deleverd: $deleverd, canceld: $canceld, inprogress: $inprogress, starttime: $starttime, startLocation: $startLocation)';
-  }
-
-  @override
-  bool operator ==(covariant DataModel other) {
-    if (identical(this, other)) return true;
-
-    return other.carnum == carnum &&
-        other.drivername == drivername &&
-        other.driverPhoneNum == driverPhoneNum &&
-        other.represintitivename == represintitivename &&
-        other.represintitivePhoneNum == represintitivePhoneNum &&
-        other.totalOrder == totalOrder &&
-        other.deleverd == deleverd &&
-        other.canceld == canceld &&
-        other.inprogress == inprogress &&
-        other.starttime == starttime &&
-        other.startLocation == startLocation;
-  }
-
-  @override
-  int get hashCode {
-    return carnum.hashCode ^
-        drivername.hashCode ^
-        driverPhoneNum.hashCode ^
-        represintitivename.hashCode ^
-        represintitivePhoneNum.hashCode ^
-        totalOrder.hashCode ^
-        deleverd.hashCode ^
-        canceld.hashCode ^
-        inprogress.hashCode ^
-        starttime.hashCode ^
-        startLocation.hashCode;
-  }
 }
 
 class DataSource extends DataGridSource {
@@ -332,6 +296,9 @@ class DataSource extends DataGridSource {
               DataGridCell<String>(
                   columnName: 'Representativephone',
                   value: e.represintitivePhoneNum),
+              DataGridCell<String>(
+                  columnName: 'chargedamount',
+                  value: '${e.chargedamount} of ${e.totlamount}'),
               DataGridCell<int>(columnName: 'totalorders', value: e.totalOrder),
               DataGridCell<int>(columnName: 'Deleverd', value: e.deleverd),
               DataGridCell<int>(columnName: 'canceld', value: e.canceld),

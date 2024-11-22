@@ -6,6 +6,7 @@ import 'package:janssendeliveryadmin/UI/GoogleMap/GoogleMap.dart';
 import 'package:janssendeliveryadmin/UI/GoogleMap/mapcontroller.dart';
 import 'package:janssendeliveryadmin/UI/bulkUploadOrders/bulkupload.dart';
 import 'package:janssendeliveryadmin/UI/carDataGrid/carDataGrid.dart';
+import 'package:janssendeliveryadmin/UI/carDataGrid/carsProvider.dart';
 import 'package:janssendeliveryadmin/UI/drivers/drivers.dart';
 import 'package:janssendeliveryadmin/UI/drivers/provider.dart';
 import 'package:janssendeliveryadmin/UI/login/loginController.dart';
@@ -58,13 +59,18 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => LoginController(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => CarsProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'admin',
         home: Consumer<LoginController>(
           builder: (context, myType, child) {
-            return myType.loggedIn == false ? LoginPage() : MainPage();
+            return
+                //  myType.loggedIn == false ? LoginPage() :
+                MainPage();
           },
         ),
       ),

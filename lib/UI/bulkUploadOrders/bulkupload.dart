@@ -157,13 +157,13 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                                   payed: false,
                                   payingWay: "",
                                   chargedamount: 0.0,
+                                  passtocrm: false,
+                                  notestocrm: '',
                                   notes: "");
 
                               FirebaseDatabase.instance
                                   .ref("orders/${record.id}")
                                   .set(record.toMap());
-
-                              print(record);
                             }
                           }
                           setState(() {

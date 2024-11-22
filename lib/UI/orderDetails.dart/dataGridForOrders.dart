@@ -190,42 +190,65 @@ class DataGridForOrder extends StatelessWidget {
                   allowFiltering: false,
                   width: 111,
                   columnName: 'Paymentmethod',
-                  label: Center(
-                    child: Text(
-                      'Payment method',
-                      style: textstyle,
-                      overflow: TextOverflow.ellipsis,
+                  label: Tooltip(
+                    message: 'Payment method',
+                    child: Center(
+                      child: Text(
+                        'Payment method',
+                        style: textstyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   )),
               GridColumn(
                   allowFiltering: false,
                   width: 111,
                   columnName: 'chargedamount',
-                  label: Center(
-                    child: Text(
-                      'charged amount',
-                      style: textstyle,
-                      overflow: TextOverflow.ellipsis,
+                  label: Tooltip(
+                    message: 'charged amount',
+                    child: Center(
+                      child: Text(
+                        'charged amount',
+                        style: textstyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   )),
               GridColumn(
                   allowFiltering: false,
                   width: 111,
                   columnName: 'resonforrejection',
-                  label: Center(
-                    child: Text(
-                      'Resons for Rejection',
-                      style: textstyle,
-                      overflow: TextOverflow.ellipsis,
+                  label: Tooltip(
+                    message: 'Resons for Rejection',
+                    child: Center(
+                      child: Text(
+                        'Resons for Rejection',
+                        style: textstyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   )),
               GridColumn(
                   allowFiltering: false,
                   width: 111,
-                  columnName: 'archived',
+                  columnName: 'passtocrm',
+                  label: Tooltip(
+                    message: 'pass to crm ?',
+                    child: Center(
+                      child: Text(
+                        'pass to crm ?',
+                        style: textstyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  )),
+              GridColumn(
+                  allowFiltering: false,
+                  width: 111,
+                  columnName: 'notes',
                   label: Center(
                     child: Text(
-                      'archived !',
+                      'notes',
                       style: textstyle,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -267,7 +290,9 @@ class DataSource extends DataGridSource {
                   columnName: 'chargedamount', value: e.chargedamount),
               DataGridCell<String>(
                   columnName: 'resonforrejection', value: e.cancelReason),
-              DataGridCell<bool>(columnName: 'archived', value: e.canceled),
+              DataGridCell<String>(
+                  columnName: 'passtocrm', value: e.notestocrm),
+              DataGridCell<String>(columnName: 'notes', value: e.notes),
               DataGridCell<bool>(columnName: 'archived', value: e.canceled),
             ]))
         .toList();
@@ -330,6 +355,20 @@ class DataSource extends DataGridSource {
                         onPressed: () {},
                       )
                     : const SizedBox();
+              }),
+            "passtocrm" => Builder(builder: (context) {
+                return e.value.toString() == ""
+                    ? const SizedBox()
+                    : Tooltip(
+                        message: e.value.toString(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.green,
+                            radius: 2,
+                          ),
+                        ),
+                      );
               }),
             "statues" => Padding(
                 padding:

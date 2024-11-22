@@ -44,6 +44,8 @@ class OrderModel {
   String payingWay;
   num chargedamount;
   //
+  bool passtocrm;
+  String notestocrm;
   String notes;
   OrderModel({
     required this.id,
@@ -74,6 +76,8 @@ class OrderModel {
     required this.payed,
     required this.payingWay,
     required this.chargedamount,
+    required this.passtocrm,
+    required this.notestocrm,
     required this.notes,
   });
 
@@ -106,6 +110,8 @@ class OrderModel {
     bool? payed,
     String? payingWay,
     num? chargedamount,
+    bool? passtocrm,
+    String? notestocrm,
     String? notes,
   }) {
     return OrderModel(
@@ -137,6 +143,8 @@ class OrderModel {
       payed: payed ?? this.payed,
       payingWay: payingWay ?? this.payingWay,
       chargedamount: chargedamount ?? this.chargedamount,
+      passtocrm: passtocrm ?? this.passtocrm,
+      notestocrm: notestocrm ?? this.notestocrm,
       notes: notes ?? this.notes,
     );
   }
@@ -171,6 +179,8 @@ class OrderModel {
       'payed': payed,
       'payingWay': payingWay,
       'chargedamount': chargedamount,
+      'passtocrm': passtocrm,
+      'notestocrm': notestocrm,
       'notes': notes,
     };
   }
@@ -213,6 +223,8 @@ class OrderModel {
       payed: map['payed'] as bool,
       payingWay: map['payingWay'] as String,
       chargedamount: map['chargedamount'] as num,
+      passtocrm: map['passtocrm'] as bool,
+      notestocrm: map['notestocrm'] as String,
       notes: map['notes'] as String,
     );
   }
@@ -224,7 +236,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, orderNum: $orderNum, orderDate: $orderDate, carNum: $carNum, driverName: $driverName, driverPhoneNum: $driverPhoneNum, represetiveName: $represetiveName, represntivePhoneNum: $represntivePhoneNum, clientName: $clientName, phoneNum: $phoneNum, governomate: $governomate, city: $city, adress: $adress, items: $items, shipped: $shipped, shippedTime: $shippedTime, shippedLocation: $shippedLocation, deleverd: $deleverd, deleverdLocation: $deleverdLocation, deleverdTime: $deleverdTime, canceled: $canceled, cancelReason: $cancelReason, canceltime: $canceltime, closed: $closed, closedTime: $closedTime, payed: $payed, payingWay: $payingWay, chargedamount: $chargedamount, notes: $notes)';
+    return 'OrderModel(id: $id, orderNum: $orderNum, orderDate: $orderDate, carNum: $carNum, driverName: $driverName, driverPhoneNum: $driverPhoneNum, represetiveName: $represetiveName, represntivePhoneNum: $represntivePhoneNum, clientName: $clientName, phoneNum: $phoneNum, governomate: $governomate, city: $city, adress: $adress, items: $items, shipped: $shipped, shippedTime: $shippedTime, shippedLocation: $shippedLocation, deleverd: $deleverd, deleverdLocation: $deleverdLocation, deleverdTime: $deleverdTime, canceled: $canceled, cancelReason: $cancelReason, canceltime: $canceltime, closed: $closed, closedTime: $closedTime, payed: $payed, payingWay: $payingWay, chargedamount: $chargedamount, passtocrm: $passtocrm, notestocrm: $notestocrm, notes: $notes)';
   }
 
   @override
@@ -259,6 +271,8 @@ class OrderModel {
         other.payed == payed &&
         other.payingWay == payingWay &&
         other.chargedamount == chargedamount &&
+        other.passtocrm == passtocrm &&
+        other.notestocrm == notestocrm &&
         other.notes == notes;
   }
 
@@ -292,6 +306,8 @@ class OrderModel {
         payed.hashCode ^
         payingWay.hashCode ^
         chargedamount.hashCode ^
+        passtocrm.hashCode ^
+        notestocrm.hashCode ^
         notes.hashCode;
   }
 }

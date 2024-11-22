@@ -12,8 +12,13 @@ class OrderProvider extends ChangeNotifier {
   }
 
   once() {
-    FirebaseDatabase.instance.ref("orders").get().then((onValue) {
-      for (var element in onValue.children) {
+    FirebaseDatabase.instance
+        .ref("orders/")
+        .orderByChild('closed')
+        .equalTo(false)
+        .once()
+        .then((onValue) {
+      for (var element in onValue.snapshot.children) {
         Map<String, dynamic> data = jsonDecode(jsonEncode(element.value));
         final record = OrderModel.fromMap(data);
         orders.addAll({record.id.toString(): record});
@@ -23,20 +28,54 @@ class OrderProvider extends ChangeNotifier {
   }
 
   update() {
-    FirebaseDatabase.instance.ref("orders").onChildChanged.listen((onValue) {
+    FirebaseDatabase.instance
+        .ref("orders")
+        // .orderByChild('closed')
+        // .equalTo(false)
+        .onChildChanged
+        .listen((onValue) {
       Map<String, dynamic> data =
           jsonDecode(jsonEncode(onValue.snapshot.value));
       final record = OrderModel.fromMap(data);
-      orders.addAll({record.id.toString(): record});
+      if (record.closed == true) {
+        orders.removeWhere((k, v) => k == record.id.toString());
+      } else {
+        orders.addAll({record.id.toString(): record});
+      }
       notifyListeners();
     });
-    FirebaseDatabase.instance.ref("orders").onChildAdded.listen((onValue) {
+    FirebaseDatabase.instance
+        .ref("orders/")
+        .orderByChild('closed')
+        .equalTo(false)
+        .onChildAdded
+        .listen((onValue) {
       Map<String, dynamic> data =
           jsonDecode(jsonEncode(onValue.snapshot.value));
       final record = OrderModel.fromMap(data);
-      orders.addAll({record.id.toString(): record});
+      if (record.closed == true) {
+        orders.removeWhere((k, v) => k == record.id.toString());
+      } else {
+        orders.addAll({record.id.toString(): record});
+      }
       notifyListeners();
     });
+  }
+
+  updaterecord(OrderModel order) {
+    FirebaseDatabase.instance.ref("orders/${order.id}").set(order.toMap());
+  }
+
+  archiveSelectedCar(String carNum) {
+    List<OrderModel> r = [];
+    r.addAll(orders.values.where((e) => e.carNum == carNum));
+
+    for (var action in r) {
+      action.closed = true;
+    }
+    for (var element in r) {
+      updaterecord(element);
+    }
   }
 
   int v = 88;
@@ -44,5 +83,3 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-class RemoteDataSorce extends ChangeNotifier {}
