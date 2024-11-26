@@ -1,10 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: must_be_immutable
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 0500a37691a4c40301ad6b39f6f00a021374b76c
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -306,7 +302,9 @@ class DataSource extends DataGridSource {
               DataGridCell<int>(columnName: 'canceld', value: e.canceld),
               DataGridCell<int>(columnName: 'inprogress', value: e.inprogress),
               DataGridCell<String>(
-                  columnName: 'starttime', value: e.starttime.year==0?"":e.starttime.formatt_yMdHM()),
+                  columnName: 'starttime',
+                  value:
+                      e.starttime.year == 0 ? "" : e.starttime.formatt_yMdHM()),
               DataGridCell<DataModel>(columnName: 'startlocation', value: e),
               DataGridCell<double>(
                   columnName: 'progress',
@@ -397,7 +395,7 @@ class DataSource extends DataGridSource {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(0.0),
                 child: Tooltip(
-                  message:e.value.toString() ,
+                  message: e.value.toString(),
                   child: Text(
                     e.value.toString(),
                     overflow: TextOverflow.ellipsis,

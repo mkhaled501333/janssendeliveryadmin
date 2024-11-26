@@ -1,35 +1,40 @@
-
-import 'dart:convert';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:janssendeliveryadmin/data/models/orders.dart';
 
 class Archive extends StatelessWidget {
   const Archive({super.key});
 
   @override
   Widget build(BuildContext context) {
+    print('object676767');
     FirebaseDatabase.instance
         .ref("orders/")
         .orderByChild('closed')
         .equalTo(false)
-        .once().then((onValue){print(onValue);});
+        .get()
+        .then((onValue) {
+      print(onValue);
+    });
     return Scaffold(
-            backgroundColor: const Color.fromARGB(255, 250, 250, 250),
-
-      body: FutureBuilder(future: FirebaseDatabase.instance
-        .ref("orders/")
-        .orderByChild('closed')
-        .equalTo(false)
-        .once().then((onValue){print(onValue);}), builder: (c,snapshot){
-          print(snapshot.hasData);
-              if (!snapshot.hasData) {
-                 return CircularProgressIndicator();
-              } else {
-                 return Text('data');
-              }
-        }),);
+      backgroundColor: const Color.fromARGB(255, 250, 250, 250),
+      body: FutureBuilder(
+          future: FirebaseDatabase.instance
+              .ref("orders/")
+              .orderByChild('closed')
+              .equalTo(false)
+              .once()
+              .then((onValue) {
+            print(onValue);
+          }),
+          builder: (c, snapshot) {
+            print(snapshot.hasData);
+            if (!snapshot.hasData) {
+              return CircularProgressIndicator();
+            } else {
+              return Text('data');
+            }
+          }),
+    );
   }
 }
 
