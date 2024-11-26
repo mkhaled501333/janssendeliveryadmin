@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:janssendeliveryadmin/data/models/orders.dart';
@@ -11,13 +10,13 @@ class OrderProvider extends ChangeNotifier {
     update();
   }
 
-  once() {
+  once() {print('object11');
     FirebaseDatabase.instance
         .ref("orders/")
         .orderByChild('closed')
         .equalTo(false)
         .once()
-        .then((onValue) {
+        .then((onValue) {print('object');
       for (var element in onValue.snapshot.children) {
         Map<String, dynamic> data = jsonDecode(jsonEncode(element.value));
         final record = OrderModel.fromMap(data);
@@ -27,7 +26,7 @@ class OrderProvider extends ChangeNotifier {
     });
   }
 
-  update() {
+  update() {print('object22');
     FirebaseDatabase.instance
         .ref("orders")
         // .orderByChild('closed')

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:janssendeliveryadmin/UI/GoogleMap/GoogleMap.dart';
 import 'package:janssendeliveryadmin/UI/GoogleMap/mapcontroller.dart';
+import 'package:janssendeliveryadmin/UI/archive/archive.dart';
 import 'package:janssendeliveryadmin/UI/bulkUploadOrders/bulkupload.dart';
 import 'package:janssendeliveryadmin/UI/carDataGrid/carDataGrid.dart';
 import 'package:janssendeliveryadmin/UI/carDataGrid/carsProvider.dart';
 import 'package:janssendeliveryadmin/UI/drivers/drivers.dart';
 import 'package:janssendeliveryadmin/UI/drivers/provider.dart';
 import 'package:janssendeliveryadmin/UI/login/loginController.dart';
-import 'package:janssendeliveryadmin/UI/login/loginPage.dart';
 
 import 'package:janssendeliveryadmin/UI/orderDetails.dart/dataGridForOrders.dart';
 import 'package:janssendeliveryadmin/UI/orderDetails.dart/provider.dart';
@@ -129,12 +129,12 @@ class _SidebarPageState extends State<SidebarPage> {
       ),
       CollapsibleItem(
         text: 'Settings',
-        icon: Icons.settings,
+        icon: Icons.car_crash,
         onPressed: () => setState(() => _headline = 'Settings'),
       ),
       CollapsibleItem(
         text: 'Analytics',
-        icon: Icons.access_alarm,
+        icon: Icons.archive_sharp,
         onPressed: () => setState(() => _headline = 'Analytics'),
       ),
     ];
@@ -146,7 +146,7 @@ class _SidebarPageState extends State<SidebarPage> {
       "Dashboard" => const MyHomePage(),
       "upload Orders" => const bulkUploadOrders(),
       "Settings" => const Drivers(),
-      "Analytics" => Text(_headline),
+      "Analytics" => Archive(),
       _ => const MyHomePage(),
     };
     return SafeArea(
