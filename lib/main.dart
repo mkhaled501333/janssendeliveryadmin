@@ -135,7 +135,7 @@ class _SidebarPageState extends State<SidebarPage> {
       CollapsibleItem(
         text: 'Analytics',
         icon: Icons.archive_sharp,
-        onPressed: () => setState(() => _headline = 'Analytics'),
+        onPressed: () => setState(() => _headline = 'Archive'),
       ),
     ];
   }
@@ -146,7 +146,7 @@ class _SidebarPageState extends State<SidebarPage> {
       "Dashboard" => const MyHomePage(),
       "upload Orders" => const bulkUploadOrders(),
       "Settings" => const Drivers(),
-      "Analytics" => Archive(),
+      "Archive" => Archive(),
       _ => const MyHomePage(),
     };
     return SafeArea(

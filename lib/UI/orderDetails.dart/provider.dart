@@ -10,13 +10,15 @@ class OrderProvider extends ChangeNotifier {
     update();
   }
 
-  once() {print('object11');
+  once() {
+    print('object11');
     FirebaseDatabase.instance
         .ref("orders/")
         .orderByChild('closed')
-        .equalTo(false)
+        .equalTo('false')
         .once()
-        .then((onValue) {print('object');
+        .then((onValue) {
+      print('object');
       for (var element in onValue.snapshot.children) {
         Map<String, dynamic> data = jsonDecode(jsonEncode(element.value));
         final record = OrderModel.fromMap(data);
@@ -26,13 +28,15 @@ class OrderProvider extends ChangeNotifier {
     });
   }
 
-  update() {print('object22');
+  update() {
+    print('object22');
     FirebaseDatabase.instance
-        .ref("orders")
-        // .orderByChild('closed')
-        // .equalTo(false)
+        .ref("orders/")
+        .orderByChild('closed')
+        .equalTo(false)
         .onChildChanged
         .listen((onValue) {
+      print('object33');
       Map<String, dynamic> data =
           jsonDecode(jsonEncode(onValue.snapshot.value));
       final record = OrderModel.fromMap(data);
@@ -49,6 +53,7 @@ class OrderProvider extends ChangeNotifier {
         .equalTo(false)
         .onChildAdded
         .listen((onValue) {
+      print('object44');
       Map<String, dynamic> data =
           jsonDecode(jsonEncode(onValue.snapshot.value));
       final record = OrderModel.fromMap(data);
