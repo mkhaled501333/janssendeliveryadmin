@@ -5,20 +5,22 @@ import 'package:janssendeliveryadmin/data/models/orders.dart';
 
 class OrderProvider extends ChangeNotifier {
   Map<String, OrderModel> orders = {};
+  int lastOrderNum = 0;
   getData() {
-    once();
+    // once();
+
     update();
   }
 
   once() {
-    print('object11');
     FirebaseDatabase.instance
         .ref("orders/")
         .orderByChild('closed')
         .equalTo('false')
         .once()
         .then((onValue) {
-      print('object');
+      print('once');
+
       for (var element in onValue.snapshot.children) {
         Map<String, dynamic> data = jsonDecode(jsonEncode(element.value));
         final record = OrderModel.fromMap(data);
@@ -29,14 +31,29 @@ class OrderProvider extends ChangeNotifier {
   }
 
   update() {
-    print('object22');
+    FirebaseDatabase.instance.ref("lastOrderNum").onValue.listen((onData) {
+      lastOrderNum = onData.snapshot.value as int;
+    });
+    FirebaseDatabase.instance.ref("orders/").onChildChanged.listen((onValue) {
+      print('onChildChanged');
+      Map<String, dynamic> data =
+          jsonDecode(jsonEncode(onValue.snapshot.value));
+      final record = OrderModel.fromMap(data);
+      if (record.closed == true) {
+        orders.removeWhere((k, v) => k == record.id.toString());
+      } else {
+        orders.addAll({record.id.toString(): record});
+      }
+      notifyListeners();
+    });
     FirebaseDatabase.instance
         .ref("orders/")
         .orderByChild('closed')
         .equalTo(false)
         .onChildChanged
         .listen((onValue) {
-      print('object33');
+      print('onChildChanged filterd');
+
       Map<String, dynamic> data =
           jsonDecode(jsonEncode(onValue.snapshot.value));
       final record = OrderModel.fromMap(data);
@@ -53,7 +70,7 @@ class OrderProvider extends ChangeNotifier {
         .equalTo(false)
         .onChildAdded
         .listen((onValue) {
-      print('object44');
+      print('onChildAdded');
       Map<String, dynamic> data =
           jsonDecode(jsonEncode(onValue.snapshot.value));
       final record = OrderModel.fromMap(data);

@@ -227,6 +227,7 @@ class DataGridForcar extends StatelessWidget {
                                                   .value
                                                   .toString());
                                             }
+                                            Navigator.pop(context);
                                           },
                                           label: Row(
                                             children: [

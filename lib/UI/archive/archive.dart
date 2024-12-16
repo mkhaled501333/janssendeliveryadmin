@@ -14,18 +14,29 @@ class Archive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, OrderModel> orders = {};
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 250, 250, 250),
-      body: FutureBuilder(
-          future: FirebaseDatabase.instance.ref("orders").get(),
-          builder: (c, snapshot) {
-            if (snapshot.hasData == false) {
-              return CircularProgressIndicator();
-            } else {
-              Map<String, dynamic> data =jsonDecode(jsonEncode(snapshot.data!.value));
-              return DataGridForArchiveOrdesr(orders: data.values.map((e)=> OrderModel.fromMap(e)).toList());
-            }
-          }),
+      body: Builder(builder: (context) {
+        return FutureBuilder(
+            future: FirebaseDatabase.instance
+                .ref("orders/")
+                .orderByChild('closed')
+                .equalTo(true)
+                .get(),
+            builder: (c, snapshot) {
+              if (snapshot.hasData == false) {
+                return const CircularProgressIndicator();
+              } else {
+                for (var element in snapshot.data!.children) {
+                  final order = OrderModel.fromJson(jsonEncode(element.value));
+                  orders.addAll({order.id.toString(): order});
+                }
+                return DataGridForArchiveOrdesr(orders: orders.values.toList());
+              }
+            });
+      }),
     );
   }
 }
@@ -44,241 +55,237 @@ class DataGridForArchiveOrdesr extends StatelessWidget {
       color: Color.fromARGB(255, 112, 110, 110));
   @override
   Widget build(BuildContext context) {
-         final clients = orders
-            .map((e) => e.clientName)
-            .toSet()
-            .toList()
-            .length;
+    final clients = orders.map((e) => e.clientName).toSet().toList().length;
     return SfDataGridTheme(
-          data: const SfDataGridThemeData(
-            gridLineStrokeWidth: 0.6,
-          ),
-          child: SfDataGrid(
-            onSelectionChanged: (v, g) {
-              counter.value = _dataGridController.selectedRows.length;
-            },
-            showCheckboxColumn: true,
-            checkboxColumnSettings: const DataGridCheckboxColumnSettings(),
-            selectionMode: SelectionMode.multiple,
-            controller: _dataGridController,
-            rowHeight: 25,
-            frozenColumnsCount: 2,
-            footerFrozenColumnsCount: 1,
-            source: DataSource(data: orders.toList()),
-            columnWidthMode: ColumnWidthMode.fill,
-            allowSorting: true,
-            allowMultiColumnSorting: true,
-            allowFiltering: true,
-            showSortNumbers: true,
-            allowEditing: true,
-            headerRowHeight: 30,
-            headerGridLinesVisibility: GridLinesVisibility.both,
-            isScrollbarAlwaysShown: true,
-            showHorizontalScrollbar: true,
-            gridLinesVisibility: GridLinesVisibility.horizontal,
-            highlightRowOnHover: true,
-            columns: <GridColumn>[
-              GridColumn(
-                  allowFiltering: false,
-                  width: 111,
-                  columnName: 'id',
-                  label: Row(
-                    children: [
-                      Text(
-                        'Order No',
+      data: const SfDataGridThemeData(
+        gridLineStrokeWidth: 0.6,
+      ),
+      child: SfDataGrid(
+        onSelectionChanged: (v, g) {
+          counter.value = _dataGridController.selectedRows.length;
+        },
+        showCheckboxColumn: true,
+        checkboxColumnSettings: const DataGridCheckboxColumnSettings(),
+        selectionMode: SelectionMode.multiple,
+        controller: _dataGridController,
+        rowHeight: 25,
+        frozenColumnsCount: 2,
+        footerFrozenColumnsCount: 1,
+        source: DataSource(data: orders.toList()),
+        columnWidthMode: ColumnWidthMode.fill,
+        allowSorting: true,
+        allowMultiColumnSorting: true,
+        allowFiltering: true,
+        showSortNumbers: true,
+        allowEditing: true,
+        headerRowHeight: 30,
+        headerGridLinesVisibility: GridLinesVisibility.both,
+        isScrollbarAlwaysShown: true,
+        showHorizontalScrollbar: true,
+        gridLinesVisibility: GridLinesVisibility.horizontal,
+        highlightRowOnHover: true,
+        columns: <GridColumn>[
+          GridColumn(
+              allowFiltering: false,
+              width: 111,
+              columnName: 'id',
+              label: Row(
+                children: [
+                  Text(
+                    'Order No',
+                    style: textstyle,
+                  ),
+                  const Gap(6),
+                  ValueListenableBuilder<int>(
+                    valueListenable: counter,
+                    builder: (c, value, _) {
+                      return Text(
+                        '($value)',
                         style: textstyle,
-                      ),
-                      const Gap(6),
-                      ValueListenableBuilder<int>(
-                        valueListenable: counter,
-                        builder: (c, value, _) {
-                          return Text(
-                            '($value)',
-                            style: textstyle,
-                          );
-                        },
-                      ),
-                    ],
-                  )),
-              GridColumn(
-                  allowFiltering: false,
-                  allowEditing: true,
-                  width: 80,
-                  columnName: 'orderdata',
-                  label: Center(
-                    child: Text(
-                      ' Date',
-                      style: textstyle,
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: true,
-                  allowEditing: true,
-                  width: 144,
-                  columnName: 'client',
-                  label: Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 219, 219, 219),
-                              borderRadius: BorderRadius.circular(4)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: Text(clients.toString()),
-                          ),
-                        ),
-                        const Gap(3),
-                        Text(
-                          'Client',
-                          style: textstyle,
-                        ),
-                      ],
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: true,
-                  width: 112,
-                  columnName: 'governomate',
-                  label: Center(
-                    child: Text(
-                      'Governomate',
-                      style: textstyle,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: true,
-                  width: 111,
-                  columnName: 'city',
-                  label: Center(
-                    child: Text(
-                      'City',
-                      overflow: TextOverflow.ellipsis,
-                      style: textstyle,
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: false,
-                  width: 111,
-                  columnName: 'adress',
-                  label: Center(
-                    child: Text(
-                      'Adress',
-                      style: textstyle,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: true,
-                  width: 111,
-                  columnName: 'carnum',
-                  label: Center(
-                    child: Text(
-                      'CarNum',
-                      style: textstyle,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: true,
-                  width: 130,
-                  columnName: 'statues',
-                  label: Center(
-                    child: Text(
-                      'Statues',
-                      style: textstyle,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: false,
-                  width: 111,
-                  columnName: 'location',
-                  label: Center(
-                    child: Text(
-                      'Location',
-                      style: textstyle,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: false,
-                  width: 111,
-                  columnName: 'Paymentmethod',
-                  label: Tooltip(
-                    message: 'Payment method',
-                    child: Center(
-                      child: Text(
-                        'Payment method',
-                        style: textstyle,
-                        overflow: TextOverflow.ellipsis,
+                      );
+                    },
+                  ),
+                ],
+              )),
+          GridColumn(
+              allowFiltering: false,
+              allowEditing: true,
+              width: 80,
+              columnName: 'orderdata',
+              label: Center(
+                child: Text(
+                  ' Date',
+                  style: textstyle,
+                ),
+              )),
+          GridColumn(
+              allowFiltering: true,
+              allowEditing: true,
+              width: 144,
+              columnName: 'client',
+              label: Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 219, 219, 219),
+                          borderRadius: BorderRadius.circular(4)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Text(clients.toString()),
                       ),
                     ),
-                  )),
-              GridColumn(
-                  allowFiltering: false,
-                  width: 111,
-                  columnName: 'chargedamount',
-                  label: Tooltip(
-                    message: 'charged amount',
-                    child: Center(
-                      child: Text(
-                        'charged amount',
-                        style: textstyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: false,
-                  width: 111,
-                  columnName: 'resonforrejection',
-                  label: Tooltip(
-                    message: 'Resons for Rejection',
-                    child: Center(
-                      child: Text(
-                        'Resons for Rejection',
-                        style: textstyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: false,
-                  width: 111,
-                  columnName: 'passtocrm',
-                  label: Tooltip(
-                    message: 'pass to crm ?',
-                    child: Center(
-                      child: Text(
-                        'pass to crm ?',
-                        style: textstyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  )),
-              GridColumn(
-                  allowFiltering: false,
-                  width: 111,
-                  columnName: 'notes',
-                  label: Center(
-                    child: Text(
-                      'notes',
+                    const Gap(3),
+                    Text(
+                      'Client',
                       style: textstyle,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  )),
-              GridColumn(
-                  allowFiltering: false,
-                  allowSorting: false,
-                  width: 66,
-                  columnName: '',
-                  label: const Icon(Icons.settings)),
-            ],
-          ),
-        );
+                  ],
+                ),
+              )),
+          GridColumn(
+              allowFiltering: true,
+              width: 112,
+              columnName: 'governomate',
+              label: Center(
+                child: Text(
+                  'Governomate',
+                  style: textstyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+          GridColumn(
+              allowFiltering: true,
+              width: 111,
+              columnName: 'city',
+              label: Center(
+                child: Text(
+                  'City',
+                  overflow: TextOverflow.ellipsis,
+                  style: textstyle,
+                ),
+              )),
+          GridColumn(
+              allowFiltering: false,
+              width: 111,
+              columnName: 'adress',
+              label: Center(
+                child: Text(
+                  'Adress',
+                  style: textstyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+          GridColumn(
+              allowFiltering: true,
+              width: 111,
+              columnName: 'carnum',
+              label: Center(
+                child: Text(
+                  'CarNum',
+                  style: textstyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+          GridColumn(
+              allowFiltering: true,
+              width: 130,
+              columnName: 'statues',
+              label: Center(
+                child: Text(
+                  'Statues',
+                  style: textstyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+          GridColumn(
+              allowFiltering: false,
+              width: 111,
+              columnName: 'location',
+              label: Center(
+                child: Text(
+                  'Location',
+                  style: textstyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+          GridColumn(
+              allowFiltering: false,
+              width: 111,
+              columnName: 'Paymentmethod',
+              label: Tooltip(
+                message: 'Payment method',
+                child: Center(
+                  child: Text(
+                    'Payment method',
+                    style: textstyle,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              )),
+          GridColumn(
+              allowFiltering: false,
+              width: 111,
+              columnName: 'chargedamount',
+              label: Tooltip(
+                message: 'charged amount',
+                child: Center(
+                  child: Text(
+                    'charged amount',
+                    style: textstyle,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              )),
+          GridColumn(
+              allowFiltering: false,
+              width: 111,
+              columnName: 'resonforrejection',
+              label: Tooltip(
+                message: 'Resons for Rejection',
+                child: Center(
+                  child: Text(
+                    'Resons for Rejection',
+                    style: textstyle,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              )),
+          GridColumn(
+              allowFiltering: false,
+              width: 111,
+              columnName: 'passtocrm',
+              label: Tooltip(
+                message: 'pass to crm ?',
+                child: Center(
+                  child: Text(
+                    'pass to crm ?',
+                    style: textstyle,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              )),
+          GridColumn(
+              allowFiltering: false,
+              width: 111,
+              columnName: 'notes',
+              label: Center(
+                child: Text(
+                  'notes',
+                  style: textstyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+          GridColumn(
+              allowFiltering: false,
+              allowSorting: false,
+              width: 66,
+              columnName: '',
+              label: const Icon(Icons.settings)),
+        ],
+      ),
+    );
   }
 }
 
@@ -376,8 +383,8 @@ class DataSource extends DataGridSource {
                     ? const SizedBox()
                     : Tooltip(
                         message: e.value.toString(),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
                           child: CircleAvatar(
                             backgroundColor: Colors.green,
                             radius: 2,

@@ -106,7 +106,7 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                         ),
                         onPressed: () {
                           int lastOrderNum =
-                              context.read<OrderProvider>().orders.length;
+                              context.read<OrderProvider>().lastOrderNum;
                           if (_data.isNotEmpty) {
                             _data.removeAt(0);
 
@@ -166,6 +166,9 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                                   .set(record.toMap());
                             }
                           }
+                          FirebaseDatabase.instance
+                              .ref("lastOrderNum")
+                              .set(lastOrderNum);
                           setState(() {
                             _data.clear();
                           });
@@ -221,6 +224,7 @@ class _bulkUploadState extends State<bulkUploadOrders> {
     }
   }
 
+  // ignore: unused_element
   void _pickFile() async {
     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
 
