@@ -69,9 +69,7 @@ class MyApp extends StatelessWidget {
         title: 'admin',
         home: Consumer<LoginController>(
           builder: (context, myType, child) {
-            return
-                //  myType.loggedIn == false ? LoginPage() :
-                MainPage();
+            return myType.loggedIn == false ? LoginPage() : MainPage();
           },
         ),
       ),
@@ -171,12 +169,8 @@ class _SidebarPageState extends State<SidebarPage> {
         selectedIconBox: Colors.black,
         selectedIconColor: const Color.fromARGB(255, 255, 102, 0),
         selectedTextColor: const Color.fromARGB(255, 255, 102, 0),
-        textStyle: const TextStyle(
-            fontSize: 15,
-            fontStyle: FontStyle.italic,
-            fontWeight: FontWeight.bold),
-        toggleTitleStyle:
-            const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        textStyle: const TextStyle(fontSize: 15, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
+        toggleTitleStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         sidebarBoxShadow: [],
       ),
     );
@@ -191,11 +185,7 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       endDrawer: Consumer<SharedProvider>(
         builder: (context, myType, child) {
-          final order = context
-              .read<OrderProvider>()
-              .orders
-              .values
-              .firstWhere((test) => test.orderNum == myType.x);
+          final order = context.read<OrderProvider>().orders.values.firstWhere((test) => test.orderNum == myType.x);
 
           return Container(
             color: const Color.fromARGB(255, 255, 255, 255),
@@ -204,8 +194,7 @@ class MyHomePage extends StatelessWidget {
               const Gap(15),
               Text(
                 "Order : ${myType.x}",
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Container(
                 color: Colors.black,
@@ -224,8 +213,7 @@ class MyHomePage extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 6),
                           child: Container(
                             width: double.infinity,
-                            decoration:
-                                BoxDecoration(border: Border.all(width: .4)),
+                            decoration: BoxDecoration(border: Border.all(width: .4)),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -233,13 +221,8 @@ class MyHomePage extends StatelessWidget {
                                   e.name,
                                   style: TextStyle(fontWeight: FontWeight.w600),
                                 ),
-                                Text("Quantity : ${e.quantitiy}",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey[400])),
-                                Text("Price : ${e.price}",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w600)),
+                                Text("Quantity : ${e.quantitiy}", style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[400])),
+                                Text("Price : ${e.price}", style: TextStyle(fontWeight: FontWeight.w600)),
                               ],
                             ),
                           ),
@@ -278,10 +261,7 @@ class MyHomePage extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                  width: MediaQuery.of(context).size.width * .78 - 40,
-                  height: MediaQuery.of(context).size.height * .5,
-                  child: const DataGridForOrder()),
+              SizedBox(width: MediaQuery.of(context).size.width * .78 - 40, height: MediaQuery.of(context).size.height * .5, child: const DataGridForOrder()),
               SizedBox(
                 width: MediaQuery.of(context).size.width * .2,
                 child: const Right(),
@@ -374,14 +354,8 @@ class Right extends StatelessWidget {
                     contentPadding: const EdgeInsets.only(top: 4),
                     prefixIcon: const Icon(Icons.search_outlined),
                     hoverColor: Colors.orange,
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 255, 180, 4)),
-                        borderRadius: BorderRadius.circular(9)),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(9),
-                        borderSide:
-                            const BorderSide(color: Colors.orange, width: 3)),
+                    focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: Color.fromARGB(255, 255, 180, 4)), borderRadius: BorderRadius.circular(9)),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(9), borderSide: const BorderSide(color: Colors.orange, width: 3)),
                     hintStyle: const TextStyle(
                       fontSize: 12,
                     ),
@@ -416,8 +390,7 @@ class Right extends StatelessWidget {
                               "${((deleverd / orders.length) * 100).toStringAsFixed(1)}%",
                               style: const TextStyle(fontSize: 13),
                             ),
-                            progressColor:
-                                const Color.fromARGB(255, 90, 187, 94),
+                            progressColor: const Color.fromARGB(255, 90, 187, 94),
                           ),
                         ),
                       ],
@@ -439,8 +412,7 @@ class Right extends StatelessWidget {
                               "${((canceled / orders.length) * 100).toStringAsFixed(1)}%",
                               style: const TextStyle(fontSize: 13),
                             ),
-                            progressColor:
-                                const Color.fromARGB(255, 90, 187, 94),
+                            progressColor: const Color.fromARGB(255, 90, 187, 94),
                           ),
                         ),
                       ],
@@ -448,8 +420,7 @@ class Right extends StatelessWidget {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                            "In Progress    :${orders.length - deleverd - canceled}"),
+                        Text("In Progress    :${orders.length - deleverd - canceled}"),
                         Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: LinearPercentIndicator(
@@ -458,14 +429,12 @@ class Right extends StatelessWidget {
                             animation: true,
                             lineHeight: 15.0,
                             animationDuration: 2500,
-                            percent: (orders.length - deleverd - canceled) /
-                                orders.length,
+                            percent: (orders.length - deleverd - canceled) / orders.length,
                             center: Text(
                               "${(((orders.length - deleverd - canceled) / orders.length) * 100).toStringAsFixed(1)}%",
                               style: const TextStyle(fontSize: 13),
                             ),
-                            progressColor:
-                                const Color.fromARGB(255, 90, 187, 94),
+                            progressColor: const Color.fromARGB(255, 90, 187, 94),
                           ),
                         ),
                       ],
