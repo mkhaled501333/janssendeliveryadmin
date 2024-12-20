@@ -41,7 +41,8 @@ class DataGridForcar extends StatelessWidget {
           final deleverd = y.where((e) => e.deleverd == true).length;
           final canceld = y.where((e) => e.canceled == true).length;
           return DataModel(
-              requierdCharged: x.requeredCharged,
+              requierdCharged:
+                  y.map((e) => e.requeredCharged).reduce((a, b) => a + b),
               carnum: e,
               drivername: x.driverName,
               driverPhoneNum: x.driverPhoneNum,
@@ -50,7 +51,8 @@ class DataGridForcar extends StatelessWidget {
               totalOrder: totla,
               deleverd: deleverd,
               canceld: canceld,
-              chargedamount: x.chargedamount,
+              chargedamount:
+                  y.map((e) => e.chargedamount).reduce((a, b) => a + b),
               totlamount: y
                   .expand((f) => f.items)
                   .map((e) => e.price)
