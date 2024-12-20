@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: must_be_immutable
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -39,6 +41,7 @@ class DataGridForcar extends StatelessWidget {
           final deleverd = y.where((e) => e.deleverd == true).length;
           final canceld = y.where((e) => e.canceled == true).length;
           return DataModel(
+              requierdCharged: x.requeredCharged,
               carnum: e,
               drivername: x.driverName,
               driverPhoneNum: x.driverPhoneNum,
@@ -263,6 +266,7 @@ class DataModel {
   int inprogress;
   DateTime starttime;
   Location startLocation;
+  num requierdCharged;
   DataModel({
     required this.carnum,
     required this.drivername,
@@ -277,7 +281,130 @@ class DataModel {
     required this.inprogress,
     required this.starttime,
     required this.startLocation,
+    required this.requierdCharged,
   });
+
+  DataModel copyWith({
+    String? carnum,
+    String? drivername,
+    String? driverPhoneNum,
+    String? represintitivename,
+    String? represintitivePhoneNum,
+    num? totlamount,
+    num? chargedamount,
+    int? totalOrder,
+    int? deleverd,
+    int? canceld,
+    int? inprogress,
+    DateTime? starttime,
+    Location? startLocation,
+    num? requierdCharged,
+  }) {
+    return DataModel(
+      carnum: carnum ?? this.carnum,
+      drivername: drivername ?? this.drivername,
+      driverPhoneNum: driverPhoneNum ?? this.driverPhoneNum,
+      represintitivename: represintitivename ?? this.represintitivename,
+      represintitivePhoneNum:
+          represintitivePhoneNum ?? this.represintitivePhoneNum,
+      totlamount: totlamount ?? this.totlamount,
+      chargedamount: chargedamount ?? this.chargedamount,
+      totalOrder: totalOrder ?? this.totalOrder,
+      deleverd: deleverd ?? this.deleverd,
+      canceld: canceld ?? this.canceld,
+      inprogress: inprogress ?? this.inprogress,
+      starttime: starttime ?? this.starttime,
+      startLocation: startLocation ?? this.startLocation,
+      requierdCharged: requierdCharged ?? this.requierdCharged,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'carnum': carnum,
+      'drivername': drivername,
+      'driverPhoneNum': driverPhoneNum,
+      'represintitivename': represintitivename,
+      'represintitivePhoneNum': represintitivePhoneNum,
+      'totlamount': totlamount,
+      'chargedamount': chargedamount,
+      'totalOrder': totalOrder,
+      'deleverd': deleverd,
+      'canceld': canceld,
+      'inprogress': inprogress,
+      'starttime': starttime.millisecondsSinceEpoch,
+      'startLocation': startLocation.toMap(),
+      'requierdCharged': requierdCharged,
+    };
+  }
+
+  factory DataModel.fromMap(Map<String, dynamic> map) {
+    return DataModel(
+      carnum: map['carnum'] as String,
+      drivername: map['drivername'] as String,
+      driverPhoneNum: map['driverPhoneNum'] as String,
+      represintitivename: map['represintitivename'] as String,
+      represintitivePhoneNum: map['represintitivePhoneNum'] as String,
+      totlamount: map['totlamount'] as num,
+      chargedamount: map['chargedamount'] as num,
+      totalOrder: map['totalOrder'] as int,
+      deleverd: map['deleverd'] as int,
+      canceld: map['canceld'] as int,
+      inprogress: map['inprogress'] as int,
+      starttime: DateTime.fromMillisecondsSinceEpoch(map['starttime'] as int),
+      startLocation:
+          Location.fromMap(map['startLocation'] as Map<String, dynamic>),
+      requierdCharged: map['requierdCharged'] as num,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory DataModel.fromJson(String source) =>
+      DataModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'DataModel(carnum: $carnum, drivername: $drivername, driverPhoneNum: $driverPhoneNum, represintitivename: $represintitivename, represintitivePhoneNum: $represintitivePhoneNum, totlamount: $totlamount, chargedamount: $chargedamount, totalOrder: $totalOrder, deleverd: $deleverd, canceld: $canceld, inprogress: $inprogress, starttime: $starttime, startLocation: $startLocation, requierdCharged: $requierdCharged)';
+  }
+
+  @override
+  bool operator ==(covariant DataModel other) {
+    if (identical(this, other)) return true;
+
+    return other.carnum == carnum &&
+        other.drivername == drivername &&
+        other.driverPhoneNum == driverPhoneNum &&
+        other.represintitivename == represintitivename &&
+        other.represintitivePhoneNum == represintitivePhoneNum &&
+        other.totlamount == totlamount &&
+        other.chargedamount == chargedamount &&
+        other.totalOrder == totalOrder &&
+        other.deleverd == deleverd &&
+        other.canceld == canceld &&
+        other.inprogress == inprogress &&
+        other.starttime == starttime &&
+        other.startLocation == startLocation &&
+        other.requierdCharged == requierdCharged;
+  }
+
+  @override
+  int get hashCode {
+    return carnum.hashCode ^
+        drivername.hashCode ^
+        driverPhoneNum.hashCode ^
+        represintitivename.hashCode ^
+        represintitivePhoneNum.hashCode ^
+        totlamount.hashCode ^
+        chargedamount.hashCode ^
+        totalOrder.hashCode ^
+        deleverd.hashCode ^
+        canceld.hashCode ^
+        inprogress.hashCode ^
+        starttime.hashCode ^
+        startLocation.hashCode ^
+        requierdCharged.hashCode;
+  }
 }
 
 class DataSource extends DataGridSource {
@@ -297,7 +424,7 @@ class DataSource extends DataGridSource {
                   value: e.represintitivePhoneNum),
               DataGridCell<String>(
                   columnName: 'chargedamount',
-                  value: '${e.chargedamount} of ${e.totlamount}'),
+                  value: '${e.chargedamount} of ${e.requierdCharged}'),
               DataGridCell<int>(columnName: 'totalorders', value: e.totalOrder),
               DataGridCell<int>(columnName: 'Deleverd', value: e.deleverd),
               DataGridCell<int>(columnName: 'canceld', value: e.canceld),
