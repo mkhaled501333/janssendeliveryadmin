@@ -119,30 +119,39 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                                       e.toString().toInt(),
                                   orderNum: lastOrderNum,
                                   orderDate: DateTime.now(),
-                                  carNum: d.first[1].toString(),
-                                  driverName: d.first[2],
-                                  driverPhoneNum: d.first[3].toString(),
-                                  represetiveName: d.first[4],
-                                  represntivePhoneNum: d.first[5],
-                                  clientName: d.first[6],
-                                  phoneNum: d.first[7],
-                                  governomate: d.first[8],
-                                  city: d.first[9],
-                                  adress: d.first[10],
+                                  payToParyt: d.first[2].toString(),
+                                  shipToPary: d.first[1].toString(),
+                                  salesChanel: d.first[3].toString(),
+                                  carNum: d.first[4].toString(),
+                                  driverName: d.first[5],
+                                  driverPhoneNum: d.first[6].toString(),
+                                  represetiveName: d.first[7],
+                                  represntivePhoneNum: d.first[8],
+                                  clientName: d.first[9],
+                                  phoneNum: d.first[10],
+                                  governomate: d.first[11],
+                                  city: d.first[12],
+                                  adress: d.first[13],
                                   items: d
                                       .map((r) => ItemModel(
                                           id: DateTime.now()
                                                   .microsecondsSinceEpoch +
-                                              r[13].toString().toInt(),
-                                          name: r[11],
-                                          quantitiy: r[12].toString().toInt(),
-                                          price: r[13]
+                                              r[16].toString().toInt(),
+                                          name: r[14],
+                                          quantitiy: r[15].toString().toInt(),
+                                          price: r[16]
                                               .toString()
                                               .toInt()
                                               .toDouble()
                                               .toStringAsFixed(1)
                                               .todouble()))
                                       .toList(),
+                                  requeredCharged: d.first[17]
+                                      .toString()
+                                      .toInt()
+                                      .toDouble()
+                                      .toStringAsFixed(1)
+                                      .todouble(),
                                   shipped: false,
                                   shippedTime: DateTime(0),
                                   shippedLocation: Location(lat: "", lon: ""),

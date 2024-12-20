@@ -243,6 +243,45 @@ class DataGridForOrder extends StatelessWidget {
                     ),
                   )),
               GridColumn(
+                  width: 120,
+                  columnName: 'pay To party',
+                  label: Tooltip(
+                    message: 'pay To party',
+                    child: Center(
+                      child: Text(
+                        'pay To party',
+                        style: textstyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  )),
+              GridColumn(
+                  width: 120,
+                  columnName: 'ship To party',
+                  label: Tooltip(
+                    message: 'ship To party',
+                    child: Center(
+                      child: Text(
+                        'ship To party',
+                        style: textstyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  )),
+              GridColumn(
+                  width: 120,
+                  columnName: 'sales channel',
+                  label: Tooltip(
+                    message: 'sales channel',
+                    child: Center(
+                      child: Text(
+                        'sales channel',
+                        style: textstyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  )),
+              GridColumn(
                   allowFiltering: false,
                   width: 111,
                   columnName: 'notes',
@@ -292,6 +331,12 @@ class DataSource extends DataGridSource {
                   columnName: 'resonforrejection', value: e.cancelReason),
               DataGridCell<String>(
                   columnName: 'passtocrm', value: e.notestocrm),
+              DataGridCell<String>(
+                  columnName: 'ship To party', value: e.shipToPary),
+              DataGridCell<String>(
+                  columnName: 'pay To party', value: e.payToParyt),
+              DataGridCell<String>(
+                  columnName: 'sales channel', value: e.salesChanel),
               DataGridCell<String>(columnName: 'notes', value: e.notes),
               DataGridCell<bool>(columnName: 'archived', value: e.canceled),
             ]))

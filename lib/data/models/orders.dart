@@ -11,6 +11,10 @@ class OrderModel {
   int id;
   int orderNum;
   DateTime orderDate;
+  String payToParyt;
+  String shipToPary;
+  String salesChanel;
+  // car
   String carNum;
   String driverName;
   String driverPhoneNum;
@@ -42,6 +46,7 @@ class OrderModel {
   //4
   bool payed;
   String payingWay;
+  num requeredCharged;
   num chargedamount;
   //
   bool passtocrm;
@@ -51,6 +56,9 @@ class OrderModel {
     required this.id,
     required this.orderNum,
     required this.orderDate,
+    required this.payToParyt,
+    required this.shipToPary,
+    required this.salesChanel,
     required this.carNum,
     required this.driverName,
     required this.driverPhoneNum,
@@ -75,6 +83,7 @@ class OrderModel {
     required this.closedTime,
     required this.payed,
     required this.payingWay,
+    required this.requeredCharged,
     required this.chargedamount,
     required this.passtocrm,
     required this.notestocrm,
@@ -85,6 +94,9 @@ class OrderModel {
     int? id,
     int? orderNum,
     DateTime? orderDate,
+    String? payToParyt,
+    String? shipToPary,
+    String? salesChanel,
     String? carNum,
     String? driverName,
     String? driverPhoneNum,
@@ -109,6 +121,7 @@ class OrderModel {
     DateTime? closedTime,
     bool? payed,
     String? payingWay,
+    num? requeredCharged,
     num? chargedamount,
     bool? passtocrm,
     String? notestocrm,
@@ -118,6 +131,9 @@ class OrderModel {
       id: id ?? this.id,
       orderNum: orderNum ?? this.orderNum,
       orderDate: orderDate ?? this.orderDate,
+      payToParyt: payToParyt ?? this.payToParyt,
+      shipToPary: shipToPary ?? this.shipToPary,
+      salesChanel: salesChanel ?? this.salesChanel,
       carNum: carNum ?? this.carNum,
       driverName: driverName ?? this.driverName,
       driverPhoneNum: driverPhoneNum ?? this.driverPhoneNum,
@@ -142,6 +158,7 @@ class OrderModel {
       closedTime: closedTime ?? this.closedTime,
       payed: payed ?? this.payed,
       payingWay: payingWay ?? this.payingWay,
+      requeredCharged: requeredCharged ?? this.requeredCharged,
       chargedamount: chargedamount ?? this.chargedamount,
       passtocrm: passtocrm ?? this.passtocrm,
       notestocrm: notestocrm ?? this.notestocrm,
@@ -154,6 +171,9 @@ class OrderModel {
       'id': id,
       'orderNum': orderNum,
       'orderDate': orderDate.millisecondsSinceEpoch,
+      'payToParyt': payToParyt,
+      'shipToPary': shipToPary,
+      'salesChanel': salesChanel,
       'carNum': carNum,
       'driverName': driverName,
       'driverPhoneNum': driverPhoneNum,
@@ -178,6 +198,7 @@ class OrderModel {
       'closedTime': closedTime.millisecondsSinceEpoch,
       'payed': payed,
       'payingWay': payingWay,
+      'requeredCharged': requeredCharged,
       'chargedamount': chargedamount,
       'passtocrm': passtocrm,
       'notestocrm': notestocrm,
@@ -190,6 +211,9 @@ class OrderModel {
       id: map['id'] as int,
       orderNum: map['orderNum'] as int,
       orderDate: DateTime.fromMillisecondsSinceEpoch(map['orderDate'] as int),
+      payToParyt: map['payToParyt'] as String,
+      shipToPary: map['shipToPary'] as String,
+      salesChanel: map['salesChanel'] as String,
       carNum: map['carNum'] as String,
       driverName: map['driverName'] as String,
       driverPhoneNum: map['driverPhoneNum'] as String,
@@ -222,6 +246,7 @@ class OrderModel {
       closedTime: DateTime.fromMillisecondsSinceEpoch(map['closedTime'] as int),
       payed: map['payed'] as bool,
       payingWay: map['payingWay'] as String,
+      requeredCharged: map['requeredCharged'] as num,
       chargedamount: map['chargedamount'] as num,
       passtocrm: map['passtocrm'] as bool,
       notestocrm: map['notestocrm'] as String,
@@ -236,7 +261,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, orderNum: $orderNum, orderDate: $orderDate, carNum: $carNum, driverName: $driverName, driverPhoneNum: $driverPhoneNum, represetiveName: $represetiveName, represntivePhoneNum: $represntivePhoneNum, clientName: $clientName, phoneNum: $phoneNum, governomate: $governomate, city: $city, adress: $adress, items: $items, shipped: $shipped, shippedTime: $shippedTime, shippedLocation: $shippedLocation, deleverd: $deleverd, deleverdLocation: $deleverdLocation, deleverdTime: $deleverdTime, canceled: $canceled, cancelReason: $cancelReason, canceltime: $canceltime, closed: $closed, closedTime: $closedTime, payed: $payed, payingWay: $payingWay, chargedamount: $chargedamount, passtocrm: $passtocrm, notestocrm: $notestocrm, notes: $notes)';
+    return 'OrderModel(id: $id, orderNum: $orderNum, orderDate: $orderDate, payToParyt: $payToParyt, shipToPary: $shipToPary, salesChanel: $salesChanel, carNum: $carNum, driverName: $driverName, driverPhoneNum: $driverPhoneNum, represetiveName: $represetiveName, represntivePhoneNum: $represntivePhoneNum, clientName: $clientName, phoneNum: $phoneNum, governomate: $governomate, city: $city, adress: $adress, items: $items, shipped: $shipped, shippedTime: $shippedTime, shippedLocation: $shippedLocation, deleverd: $deleverd, deleverdLocation: $deleverdLocation, deleverdTime: $deleverdTime, canceled: $canceled, cancelReason: $cancelReason, canceltime: $canceltime, closed: $closed, closedTime: $closedTime, payed: $payed, payingWay: $payingWay, requeredCharged: $requeredCharged, chargedamount: $chargedamount, passtocrm: $passtocrm, notestocrm: $notestocrm, notes: $notes)';
   }
 
   @override
@@ -246,6 +271,9 @@ class OrderModel {
     return other.id == id &&
         other.orderNum == orderNum &&
         other.orderDate == orderDate &&
+        other.payToParyt == payToParyt &&
+        other.shipToPary == shipToPary &&
+        other.salesChanel == salesChanel &&
         other.carNum == carNum &&
         other.driverName == driverName &&
         other.driverPhoneNum == driverPhoneNum &&
@@ -270,6 +298,7 @@ class OrderModel {
         other.closedTime == closedTime &&
         other.payed == payed &&
         other.payingWay == payingWay &&
+        other.requeredCharged == requeredCharged &&
         other.chargedamount == chargedamount &&
         other.passtocrm == passtocrm &&
         other.notestocrm == notestocrm &&
@@ -281,6 +310,9 @@ class OrderModel {
     return id.hashCode ^
         orderNum.hashCode ^
         orderDate.hashCode ^
+        payToParyt.hashCode ^
+        shipToPary.hashCode ^
+        salesChanel.hashCode ^
         carNum.hashCode ^
         driverName.hashCode ^
         driverPhoneNum.hashCode ^
@@ -305,6 +337,7 @@ class OrderModel {
         closedTime.hashCode ^
         payed.hashCode ^
         payingWay.hashCode ^
+        requeredCharged.hashCode ^
         chargedamount.hashCode ^
         passtocrm.hashCode ^
         notestocrm.hashCode ^
