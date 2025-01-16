@@ -46,7 +46,6 @@ class OrderModel {
   //4
   bool payed;
   String payingWay;
-  num requeredCharged;
   num chargedamount;
   //
   bool passtocrm;
@@ -83,12 +82,12 @@ class OrderModel {
     required this.closedTime,
     required this.payed,
     required this.payingWay,
-    required this.requeredCharged,
     required this.chargedamount,
     required this.passtocrm,
     required this.notestocrm,
     required this.notes,
   });
+
 
   OrderModel copyWith({
     int? id,
@@ -121,7 +120,6 @@ class OrderModel {
     DateTime? closedTime,
     bool? payed,
     String? payingWay,
-    num? requeredCharged,
     num? chargedamount,
     bool? passtocrm,
     String? notestocrm,
@@ -158,7 +156,6 @@ class OrderModel {
       closedTime: closedTime ?? this.closedTime,
       payed: payed ?? this.payed,
       payingWay: payingWay ?? this.payingWay,
-      requeredCharged: requeredCharged ?? this.requeredCharged,
       chargedamount: chargedamount ?? this.chargedamount,
       passtocrm: passtocrm ?? this.passtocrm,
       notestocrm: notestocrm ?? this.notestocrm,
@@ -198,7 +195,6 @@ class OrderModel {
       'closedTime': closedTime.millisecondsSinceEpoch,
       'payed': payed,
       'payingWay': payingWay,
-      'requeredCharged': requeredCharged,
       'chargedamount': chargedamount,
       'passtocrm': passtocrm,
       'notestocrm': notestocrm,
@@ -224,21 +220,13 @@ class OrderModel {
       governomate: map['governomate'] as String,
       city: map['city'] as String,
       adress: map['adress'] as String,
-      items: List<ItemModel>.from(
-        (map['items'] as List<dynamic>).map<ItemModel>(
-          (x) => ItemModel.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      items: List<ItemModel>.from((map['items'] as List<dynamic>).map<ItemModel>((x) => ItemModel.fromMap(x as Map<String,dynamic>),),),
       shipped: map['shipped'] as bool,
-      shippedTime:
-          DateTime.fromMillisecondsSinceEpoch(map['shippedTime'] as int),
-      shippedLocation:
-          Location.fromMap(map['shippedLocation'] as Map<String, dynamic>),
+      shippedTime: DateTime.fromMillisecondsSinceEpoch(map['shippedTime'] as int),
+      shippedLocation: Location.fromMap(map['shippedLocation'] as Map<String,dynamic>),
       deleverd: map['deleverd'] as bool,
-      deleverdLocation:
-          Location.fromMap(map['deleverdLocation'] as Map<String, dynamic>),
-      deleverdTime:
-          DateTime.fromMillisecondsSinceEpoch(map['deleverdTime'] as int),
+      deleverdLocation: Location.fromMap(map['deleverdLocation'] as Map<String,dynamic>),
+      deleverdTime: DateTime.fromMillisecondsSinceEpoch(map['deleverdTime'] as int),
       canceled: map['canceled'] as bool,
       cancelReason: map['cancelReason'] as String,
       canceltime: DateTime.fromMillisecondsSinceEpoch(map['canceltime'] as int),
@@ -246,7 +234,6 @@ class OrderModel {
       closedTime: DateTime.fromMillisecondsSinceEpoch(map['closedTime'] as int),
       payed: map['payed'] as bool,
       payingWay: map['payingWay'] as String,
-      requeredCharged: map['requeredCharged'] as num,
       chargedamount: map['chargedamount'] as num,
       passtocrm: map['passtocrm'] as bool,
       notestocrm: map['notestocrm'] as String,
@@ -256,91 +243,89 @@ class OrderModel {
 
   String toJson() => json.encode(toMap());
 
-  factory OrderModel.fromJson(String source) =>
-      OrderModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory OrderModel.fromJson(String source) => OrderModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, orderNum: $orderNum, orderDate: $orderDate, payToParyt: $payToParyt, shipToPary: $shipToPary, salesChanel: $salesChanel, carNum: $carNum, driverName: $driverName, driverPhoneNum: $driverPhoneNum, represetiveName: $represetiveName, represntivePhoneNum: $represntivePhoneNum, clientName: $clientName, phoneNum: $phoneNum, governomate: $governomate, city: $city, adress: $adress, items: $items, shipped: $shipped, shippedTime: $shippedTime, shippedLocation: $shippedLocation, deleverd: $deleverd, deleverdLocation: $deleverdLocation, deleverdTime: $deleverdTime, canceled: $canceled, cancelReason: $cancelReason, canceltime: $canceltime, closed: $closed, closedTime: $closedTime, payed: $payed, payingWay: $payingWay, requeredCharged: $requeredCharged, chargedamount: $chargedamount, passtocrm: $passtocrm, notestocrm: $notestocrm, notes: $notes)';
+    return 'OrderModel(id: $id, orderNum: $orderNum, orderDate: $orderDate, payToParyt: $payToParyt, shipToPary: $shipToPary, salesChanel: $salesChanel, carNum: $carNum, driverName: $driverName, driverPhoneNum: $driverPhoneNum, represetiveName: $represetiveName, represntivePhoneNum: $represntivePhoneNum, clientName: $clientName, phoneNum: $phoneNum, governomate: $governomate, city: $city, adress: $adress, items: $items, shipped: $shipped, shippedTime: $shippedTime, shippedLocation: $shippedLocation, deleverd: $deleverd, deleverdLocation: $deleverdLocation, deleverdTime: $deleverdTime, canceled: $canceled, cancelReason: $cancelReason, canceltime: $canceltime, closed: $closed, closedTime: $closedTime, payed: $payed, payingWay: $payingWay, chargedamount: $chargedamount, passtocrm: $passtocrm, notestocrm: $notestocrm, notes: $notes)';
   }
 
   @override
   bool operator ==(covariant OrderModel other) {
     if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.orderNum == orderNum &&
-        other.orderDate == orderDate &&
-        other.payToParyt == payToParyt &&
-        other.shipToPary == shipToPary &&
-        other.salesChanel == salesChanel &&
-        other.carNum == carNum &&
-        other.driverName == driverName &&
-        other.driverPhoneNum == driverPhoneNum &&
-        other.represetiveName == represetiveName &&
-        other.represntivePhoneNum == represntivePhoneNum &&
-        other.clientName == clientName &&
-        other.phoneNum == phoneNum &&
-        other.governomate == governomate &&
-        other.city == city &&
-        other.adress == adress &&
-        listEquals(other.items, items) &&
-        other.shipped == shipped &&
-        other.shippedTime == shippedTime &&
-        other.shippedLocation == shippedLocation &&
-        other.deleverd == deleverd &&
-        other.deleverdLocation == deleverdLocation &&
-        other.deleverdTime == deleverdTime &&
-        other.canceled == canceled &&
-        other.cancelReason == cancelReason &&
-        other.canceltime == canceltime &&
-        other.closed == closed &&
-        other.closedTime == closedTime &&
-        other.payed == payed &&
-        other.payingWay == payingWay &&
-        other.requeredCharged == requeredCharged &&
-        other.chargedamount == chargedamount &&
-        other.passtocrm == passtocrm &&
-        other.notestocrm == notestocrm &&
-        other.notes == notes;
+  
+    return 
+      other.id == id &&
+      other.orderNum == orderNum &&
+      other.orderDate == orderDate &&
+      other.payToParyt == payToParyt &&
+      other.shipToPary == shipToPary &&
+      other.salesChanel == salesChanel &&
+      other.carNum == carNum &&
+      other.driverName == driverName &&
+      other.driverPhoneNum == driverPhoneNum &&
+      other.represetiveName == represetiveName &&
+      other.represntivePhoneNum == represntivePhoneNum &&
+      other.clientName == clientName &&
+      other.phoneNum == phoneNum &&
+      other.governomate == governomate &&
+      other.city == city &&
+      other.adress == adress &&
+      listEquals(other.items, items) &&
+      other.shipped == shipped &&
+      other.shippedTime == shippedTime &&
+      other.shippedLocation == shippedLocation &&
+      other.deleverd == deleverd &&
+      other.deleverdLocation == deleverdLocation &&
+      other.deleverdTime == deleverdTime &&
+      other.canceled == canceled &&
+      other.cancelReason == cancelReason &&
+      other.canceltime == canceltime &&
+      other.closed == closed &&
+      other.closedTime == closedTime &&
+      other.payed == payed &&
+      other.payingWay == payingWay &&
+      other.chargedamount == chargedamount &&
+      other.passtocrm == passtocrm &&
+      other.notestocrm == notestocrm &&
+      other.notes == notes;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-        orderNum.hashCode ^
-        orderDate.hashCode ^
-        payToParyt.hashCode ^
-        shipToPary.hashCode ^
-        salesChanel.hashCode ^
-        carNum.hashCode ^
-        driverName.hashCode ^
-        driverPhoneNum.hashCode ^
-        represetiveName.hashCode ^
-        represntivePhoneNum.hashCode ^
-        clientName.hashCode ^
-        phoneNum.hashCode ^
-        governomate.hashCode ^
-        city.hashCode ^
-        adress.hashCode ^
-        items.hashCode ^
-        shipped.hashCode ^
-        shippedTime.hashCode ^
-        shippedLocation.hashCode ^
-        deleverd.hashCode ^
-        deleverdLocation.hashCode ^
-        deleverdTime.hashCode ^
-        canceled.hashCode ^
-        cancelReason.hashCode ^
-        canceltime.hashCode ^
-        closed.hashCode ^
-        closedTime.hashCode ^
-        payed.hashCode ^
-        payingWay.hashCode ^
-        requeredCharged.hashCode ^
-        chargedamount.hashCode ^
-        passtocrm.hashCode ^
-        notestocrm.hashCode ^
-        notes.hashCode;
+      orderNum.hashCode ^
+      orderDate.hashCode ^
+      payToParyt.hashCode ^
+      shipToPary.hashCode ^
+      salesChanel.hashCode ^
+      carNum.hashCode ^
+      driverName.hashCode ^
+      driverPhoneNum.hashCode ^
+      represetiveName.hashCode ^
+      represntivePhoneNum.hashCode ^
+      clientName.hashCode ^
+      phoneNum.hashCode ^
+      governomate.hashCode ^
+      city.hashCode ^
+      adress.hashCode ^
+      items.hashCode ^
+      shipped.hashCode ^
+      shippedTime.hashCode ^
+      shippedLocation.hashCode ^
+      deleverd.hashCode ^
+      deleverdLocation.hashCode ^
+      deleverdTime.hashCode ^
+      canceled.hashCode ^
+      cancelReason.hashCode ^
+      canceltime.hashCode ^
+      closed.hashCode ^
+      closedTime.hashCode ^
+      payed.hashCode ^
+      payingWay.hashCode ^
+      chargedamount.hashCode ^
+      passtocrm.hashCode ^
+      notestocrm.hashCode ^
+      notes.hashCode;
   }
 }

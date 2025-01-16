@@ -42,7 +42,7 @@ class DataGridForcar extends StatelessWidget {
           final canceld = y.where((e) => e.canceled == true).length;
           return DataModel(
               requierdCharged:
-                  y.map((e) => e.requeredCharged).reduce((a, b) => a + b),
+                  y.expand((e) => e.items).map((e) => e.requiredcharged,).reduce((a, b) => a + b),
               carnum: e,
               drivername: x.driverName,
               driverPhoneNum: x.driverPhoneNum,

@@ -1,13 +1,10 @@
 // ignore_for_file: camel_case_types
 
-import 'dart:convert';
-import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show Uint8List;
-import 'package:csv/csv.dart';
 import 'package:gap/gap.dart';
 import 'package:janssendeliveryadmin/UI/orderDetails.dart/provider.dart';
 import 'package:janssendeliveryadmin/app/utiles.dart';
@@ -24,7 +21,7 @@ class bulkUploadOrders extends StatefulWidget {
 }
 
 class _bulkUploadState extends State<bulkUploadOrders> {
-  List<List<dynamic>> _data = [];
+  List<List<dynamic>> excellRows = [];
   String? filePath;
   // This function is triggered when the  button is pressed
   @override
@@ -107,51 +104,49 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                         onPressed: () {
                           int lastOrderNum =
                               context.read<OrderProvider>().lastOrderNum;
-                          if (_data.isNotEmpty) {
-                            _data.removeAt(0);
-
-                            for (var e
-                                in _data.map((e) => e[0]).toSet().toList()) {
+                          if (excellRows.isNotEmpty) {
+                            excellRows.removeAt(0);
+                            for (var e in excellRows
+                                .map((e) => e[0])
+                                .toSet()
+                                .toList()) {
                               lastOrderNum++;
-                              var d = _data.where((test) => test[0] == e);
+                              var orderRows =
+                                  excellRows.where((test) => test[0] == e);
+                              print(orderRows);
+
+
+
                               final record = OrderModel(
                                   id: DateTime.now().microsecondsSinceEpoch +
                                       e.toString().toInt(),
                                   orderNum: lastOrderNum,
                                   orderDate: DateTime.now(),
-                                  payToParyt: d.first[2].toString(),
-                                  shipToPary: d.first[1].toString(),
-                                  salesChanel: d.first[3].toString(),
-                                  carNum: d.first[4].toString(),
-                                  driverName: d.first[5],
-                                  driverPhoneNum: d.first[6].toString(),
-                                  represetiveName: d.first[7],
-                                  represntivePhoneNum: d.first[8],
-                                  clientName: d.first[9],
-                                  phoneNum: d.first[10],
-                                  governomate: d.first[11],
-                                  city: d.first[12],
-                                  adress: d.first[13],
-                                  items: d
+                                  payToParyt: '',
+                                  shipToPary: '',
+                                  salesChanel: '',
+                                  carNum: orderRows.first[10].toString(),
+                                  driverName: orderRows.first[11],
+                                  driverPhoneNum:
+                                      orderRows.first[12].toString(),
+                                  represetiveName: orderRows.first[13],
+                                  represntivePhoneNum: '',
+                                  clientName: orderRows.first[2],
+                                  phoneNum: orderRows.first[3],
+                                  governomate: '',
+                                  city: '',
+                                  adress: orderRows.first[4],
+                                  items: orderRows
                                       .map((r) => ItemModel(
                                           id: DateTime.now()
                                                   .microsecondsSinceEpoch +
-                                              r[16].toString().toInt(),
-                                          name: r[14],
-                                          quantitiy: r[15].toString().toInt(),
-                                          price: r[16]
-                                              .toString()
-                                              .toInt()
-                                              .toDouble()
-                                              .toStringAsFixed(1)
-                                              .todouble()))
+                                              r[0].toString().toInt(),
+                                          name: r[7],
+                                          brand: r[5],
+                                          requiredcharged: r[9].toString().todouble().toStringAsFixed(1).todouble(),
+                                          quantitiy: r[6].toString().toInt(),
+                                          price: 0))
                                       .toList(),
-                                  requeredCharged: d.first[17]
-                                      .toString()
-                                      .toInt()
-                                      .toDouble()
-                                      .toStringAsFixed(1)
-                                      .todouble(),
                                   shipped: false,
                                   shippedTime: DateTime(0),
                                   shippedLocation: Location(lat: "", lon: ""),
@@ -169,7 +164,9 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                                   passtocrm: false,
                                   notestocrm: '',
                                   notes: "");
-
+                             
+                             
+                             
                               FirebaseDatabase.instance
                                   .ref("orders/${record.id}")
                                   .set(record.toMap());
@@ -179,7 +176,7 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                               .ref("lastOrderNum")
                               .set(lastOrderNum);
                           setState(() {
-                            _data.clear();
+                            excellRows.clear();
                           });
                         },
                       ),
@@ -195,7 +192,7 @@ class _bulkUploadState extends State<bulkUploadOrders> {
                 children: [
                   Table(
                     border: TableBorder.all(),
-                    children: _data
+                    children: excellRows
                         .map((e) => TableRow(
                             children:
                                 e.map((f) => Center(child: Text(f))).toList()))
@@ -214,19 +211,18 @@ class _bulkUploadState extends State<bulkUploadOrders> {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
-      List<List<dynamic>> rowdetail = [];
-
+      List<List<dynamic>> _excelRows = [];
       Uint8List? bytes = result.files.single.bytes;
       Excel excel = Excel.decodeBytes(bytes!);
       for (var table in excel.tables.keys) {
         for (var row in excel.tables[table]!.rows) {
-          rowdetail.addAll([row.map((e) => e!.value.toString()).toList()]);
+          _excelRows.addAll([row.map((e) => e!.value.toString()).toList()]);
         }
       }
 
-      print(rowdetail);
+      // print(_excelRows);
       setState(() {
-        _data = rowdetail;
+        excellRows = _excelRows;
       });
     } else {
       print("No file selected");
@@ -234,25 +230,25 @@ class _bulkUploadState extends State<bulkUploadOrders> {
   }
 
   // ignore: unused_element
-  void _pickFile() async {
-    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+  // void _pickFile() async {
+  //   final result = await FilePicker.platform.pickFiles(allowMultiple: false);
 
-    // if no file is picked
-    if (result == null) return;
-    // we will log the name, size and path of the
-    // first picked file (if multiple are selected)
-    print(result.files.first.name);
-    filePath = result.files.single.path!;
+  //   // if no file is picked
+  //   if (result == null) return;
+  //   // we will log the name, size and path of the
+  //   // first picked file (if multiple are selected)
+  //   print(result.files.first.name);
+  //   filePath = result.files.single.path!;
 
-    final input = File(filePath!).openRead();
-    final fields = await input
-        .transform(utf8.decoder)
-        .transform(const CsvToListConverter())
-        .toList();
-    print(fields);
+  //   final input = File(filePath!).openRead();
+  //   final fields = await input
+  //       .transform(utf8.decoder)
+  //       .transform(const CsvToListConverter())
+  //       .toList();
+  //   print(fields);
 
-    setState(() {
-      _data = fields;
-    });
-  }
+  //   setState(() {
+  //     excellRows = fields;
+  //   });
+  // }
 }
